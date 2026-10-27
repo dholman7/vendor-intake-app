@@ -1,0 +1,33 @@
+# Local demo stack. Start with `make up`, which reads NODE_VERSION from .nvmrc.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      # Demo only: development mode permits the built-in JWT secret.
+      VI_ENVIRONMENT: development
+    ports:
+      - "8000:8000"
+    volumes:
+      - api-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build:
+      context: frontend
+      args:
+        NODE_VERSION: ${NODE_VERSION:?Run `make up` so NODE_VERSION is read from .nvmrc}
+        API_ORIGIN: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  api-data:

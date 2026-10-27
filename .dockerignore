@@ -1,0 +1,14 @@
+# Root context is used only by backend/Dockerfile; keep it small.
+.git
+**/node_modules
+**/.next
+**/.venv
+**/data
+**/__pycache__
+**/.mypy_cache
+**/.ruff_cache
+**/.pytest_cache
+e2e
+frontend
+features
+samples
