@@ -1,0 +1,33 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Runtime data
+data/
+backend/data/
+
+# Test outputs and reports (never committed)
+test-results/
+playwright-report/
+blob-report/
+allure-results/
+allure-report/
+
+# Local env
+.env
+.env.*
+!.env.example
+.DS_Store
