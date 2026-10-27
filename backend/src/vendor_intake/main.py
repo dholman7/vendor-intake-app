@@ -1,6 +1,7 @@
 """App factory. Run with `uvicorn vendor_intake.main:create_app --factory`."""
 
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
+from contextlib import asynccontextmanager
 from datetime import date
 
 from fastapi import FastAPI
@@ -20,10 +21,16 @@ def create_app(
     engine = make_engine(settings.database_url)
     Base.metadata.create_all(engine)
 
+    @asynccontextmanager
+    async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+        yield
+        engine.dispose()
+
     app = FastAPI(
         title="Vendor Intake API",
         version="0.1.0",
         description="Vendor onboarding with document extraction and human review.",
+        lifespan=lifespan,
     )
     app.state.settings = settings
     app.state.session_factory = make_session_factory(engine)

@@ -14,13 +14,13 @@ from vendor_intake.db import (
     Role,
     Tenant,
     User,
-    Vendor,
     VendorCategory,
-    VendorStatus,
     make_engine,
     make_session_factory,
 )
+from vendor_intake.schemas import VendorCreate
 from vendor_intake.security import hash_password
+from vendor_intake.services.vendors import create_vendor
 
 logger = logging.getLogger(__name__)
 
@@ -54,21 +54,15 @@ def seed(session: Session) -> bool:
             tenant_id=tenant.id, email=email, name=name, role=role, password_hash=password_hash
         )
         session.add(users[email])
-    session.flush()
+    session.commit()
+    # Same path as the API, so seeded vendors get their audit trail like any other.
     member = users["member@northwind.test"]
     for name, category, contact in VENDORS:
-        session.add(
-            Vendor(
-                tenant_id=member.tenant_id,
-                name=name,
-                name_key=name.lower(),
-                category=category,
-                contact_email=contact,
-                status=VendorStatus.DRAFT,
-                created_by=member.id,
-            )
+        create_vendor(
+            session,
+            member,
+            VendorCreate(name=name, category=category, contact_email=contact),
         )
-    session.commit()
     return True
 
 

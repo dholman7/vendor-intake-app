@@ -26,6 +26,19 @@ def test_audit_trail_lists_events_oldest_first_with_actor(
     assert all(e["actor"]["email"] == "member@northwind.test" and e["at"] for e in items)
 
 
+def test_seeded_vendors_have_a_creation_event(
+    client: TestClient, api: Api, member: dict[str, str]
+) -> None:
+    # Arrange
+    seeded = client.get("/api/vendors", params={"q": "Harborline"}, headers=member).json()
+
+    # Act
+    actions = api.audit_actions(member, seeded["items"][0]["id"])
+
+    # Assert
+    assert actions == ["vendor.created"]
+
+
 def test_audit_trail_from_another_tenant_is_invisible(
     client: TestClient, api: Api, member: dict[str, str], globex: dict[str, str]
 ) -> None:

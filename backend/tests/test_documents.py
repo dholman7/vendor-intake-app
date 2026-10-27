@@ -36,6 +36,27 @@ def test_upload_returns_processing_then_extracts_in_background(
     ]
 
 
+def test_failed_extraction_marks_document_failed_and_is_audited(
+    client: TestClient, api: Api, member: dict[str, str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Arrange
+    def broken_extractor(*_: object) -> None:
+        raise RuntimeError("extractor crashed")
+
+    monkeypatch.setattr("vendor_intake.services.documents.extract_fields", broken_extractor)
+    vendor = api.create_vendor(member)
+
+    # Act
+    document_id = api.upload(member, vendor["id"], "w9", "Legal Name: Acme").json()["id"]
+
+    # Assert
+    document = client.get(f"/api/documents/{document_id}", headers=member).json()
+    assert document["status"] == "failed"
+    extraction = client.get(f"/api/documents/{document_id}/extraction", headers=member)
+    assert extraction.status_code == 404
+    assert api.audit_actions(member, vendor["id"])[-1] == "document.failed"
+
+
 def test_unparseable_field_gets_null_value_and_low_confidence(
     api: Api, member: dict[str, str]
 ) -> None:
