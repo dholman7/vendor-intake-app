@@ -20,9 +20,10 @@ Feature: Review vendors
 
   Scenario: The review queue shows lowest confidence first
     Given I am signed in as "reviewer@northwind.test"
-    And two vendors are in review with lowest field confidences 0.40 and 0.95
+    And two vendors are in review, one with an insurance expiry date that could not be parsed
     When I open the review queue
-    Then the first item has lowest confidence 0.40
+    Then the vendor with the unparsed date is listed before the other
+    And the queue is ordered by each item's lowest field confidence, lowest first
 
   Scenario: Members cannot see the review queue
     Given I am signed in as "member@northwind.test"
