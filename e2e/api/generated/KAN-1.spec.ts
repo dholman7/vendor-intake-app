@@ -60,6 +60,10 @@ test("A member cannot approve an extraction", { tag: "@KAN-1" }, async ({ apiAs 
   expect(decisionRes.status(), body).toBe(403);
   expect(JSON.parse(body).error.code, body).toBe("forbidden");
 
+  const recheckRes = await member.get(`/api/documents/${docs[0].id}/extraction`);
+  expect(recheckRes.status(), await recheckRes.text()).toBe(200);
+  expect((await recheckRes.json()).status).toBe("pending_review");
+
   const afterRes = await member.get(`/api/vendors/${vendor.id}`);
   expect(afterRes.status(), await afterRes.text()).toBe(200);
   const after = await afterRes.json();
