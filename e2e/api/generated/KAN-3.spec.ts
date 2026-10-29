@@ -2,13 +2,14 @@ import fs from "node:fs";
 
 import { expect, sample, test, uniqueName } from "../../fixtures";
 
-const rows: [string, string, number][] = [
-  ["w9.TXT", "text/plain", 201],
-  ["w9.txt", "application/octet-stream", 201],
-  ["w9.png", "application/pdf", 415],
+// file, declared type, expected status, content type the server should store (from the extension)
+const rows: [string, string, number, string | null][] = [
+  ["w9.TXT", "text/plain", 201, "text/plain"],
+  ["w9.txt", "application/octet-stream", 201, "text/plain"],
+  ["w9.png", "application/pdf", 415, null],
 ];
 
-for (const [file, declared, status] of rows) {
+for (const [file, declared, status, stored] of rows) {
   test(
     `upload ${file} declared as ${declared} returns ${status}`,
     { tag: "@KAN-3" },
@@ -34,6 +35,9 @@ for (const [file, declared, status] of rows) {
       expect(uploadRes.status(), body).toBe(status);
       if (status === 415) {
         expect(JSON.parse(body).error.code, body).toBe("unsupported_type");
+      }
+      if (stored) {
+        expect(JSON.parse(body).content_type, body).toBe(stored);
       }
     },
   );
