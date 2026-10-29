@@ -1,0 +1,33 @@
+name: Close Jira issue on merge
+
+# When a pull request opened by `storywright publish` merges, comment the merge commit on its
+# Jira issue and move the issue to Done. Same-repo branches only: fork PRs never see secrets.
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  close:
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'storywright/') &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned to a commit: this job holds a Jira token. (astral-sh/setup-uv v10.3.3)
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
+      - name: Close the Jira issue
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          # Event fields go through env, never inline in the script, so a branch name can't inject.
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: >-
+          uvx --from "git+https://github.com/dholman7/storywright@99a4c9d94bc96391256e13c557ff74db4b856ef2"
+          storywright close --branch "$BRANCH" --pr-url "$PR_URL" --sha "$MERGE_SHA" --yes
