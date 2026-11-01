@@ -30,7 +30,7 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-5. No fixed waits** (lint). Use web-first assertions (`await expect(locator).toBeVisible()`), and `expect.poll` for background work such as document extraction. Never use `waitForTimeout`, `networkidle`, or `force`.
 
-**PW-6. One import** (lint). Everything comes from `../fixtures`, types included; no inline `import("...")` types.
+**PW-6. One import** (lint). Everything from the test framework and this suite comes from `../fixtures`, types included; no inline `import("...")` types. Node built-ins such as `node:fs` are fine.
 
 **PW-7. Role, label, and text locators only** (lint). No CSS or XPath. If an element can't be found by role or label, fix its accessibility in the app.
 
@@ -38,7 +38,7 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-9. Status assertions carry the body** (lint). Use `expectStatus(response, 201)`, never a bare `expect(response.status())`.
 
-**PW-10. One behavior per test, in Arrange, Act, Assert order**, each step marked with a comment. A test from a story carries its tag: `test("...", { tag: "@KAN-12" }, ...)`.
+**PW-10. One behavior per test, in Arrange, Act, Assert order**, each step marked with a comment. A test from a story carries its tag: `test("...", { tag: "@KAN-12" }, ...)`. The exception is a journey test that follows one user flow end to end, across roles if it must, such as the member-to-reviewer flow in `ui/onboarding.spec.ts`: keep one per flow and say so in a comment.
 
 **PW-11. Tests don't share data.** Every test creates what it needs, using `uniqueName` for anything unique such as vendor names. Only the seeded personas may be assumed to exist.
 
