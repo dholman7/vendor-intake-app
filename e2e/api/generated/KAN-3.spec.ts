@@ -19,9 +19,10 @@ for (const [file, declared] of accepted) {
       multipart: { kind: "w9", file: { name: file, mimeType: declared, buffer: readFileSync(sample("w9.txt")) } },
     });
 
-    // Assert
-    const document = await expectStatus(response, 201);
-    expect(document.content_type).toBe("text/plain");
+    // Assert: re-read it, since the story is about what is stored (PW-12)
+    const { id } = await expectStatus(response, 201);
+    const stored = await expectStatus(await member.get(`/api/documents/${id}`), 200);
+    expect(stored.content_type).toBe("text/plain");
   });
 }
 

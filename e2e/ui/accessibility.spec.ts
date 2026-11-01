@@ -35,9 +35,8 @@ test("new vendor form has no serious violations", async ({ pages, signIn, a11y }
 });
 
 test("vendor detail with extracted fields has no serious violations", async ({ pages, signIn, factory, a11y }) => {
-  // Arrange: an extracted document, so the boxed form fields are part of the scan
-  const vendor = await factory.vendor();
-  await factory.upload(vendor.id, "w9");
+  // Arrange: extracted documents, so the boxed form fields are part of the scan
+  const { vendor } = await factory.vendorWithDocuments();
   await signIn("member");
 
   // Act
