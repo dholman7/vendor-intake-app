@@ -1,5 +1,5 @@
 // features/auth.feature (a starting point; most API coverage is left for generated tests)
-import { PASSWORD, USERS, expect, test } from "../fixtures";
+import { PASSWORD, USERS, expect, expectStatus, test } from "../fixtures";
 
 test.describe("sign in", () => {
   test("returns a token and an HttpOnly session cookie", async ({ request }) => {
@@ -9,8 +9,8 @@ test.describe("sign in", () => {
     });
 
     // Assert
-    expect(response.status()).toBe(200);
-    expect((await response.json()).access_token).toBeTruthy();
+    const body = await expectStatus(response, 200);
+    expect(body.access_token).toBeTruthy();
     const cookie = response.headersArray().find((h) => h.name.toLowerCase() === "set-cookie");
     expect(cookie?.value).toMatch(/^session=/);
     expect(cookie?.value.toLowerCase()).toContain("httponly");
@@ -23,8 +23,8 @@ test.describe("sign in", () => {
     });
 
     // Assert
-    expect(response.status()).toBe(401);
-    expect((await response.json()).error.code).toBe("invalid_credentials");
+    const body = await expectStatus(response, 401);
+    expect(body.error.code).toBe("invalid_credentials");
   });
 });
 
@@ -36,8 +36,7 @@ test("profile shows the signed-in user's role and tenant", async ({ apiAs }) => 
   const response = await member.get("/api/me");
 
   // Assert
-  expect(response.status()).toBe(200);
-  const profile = await response.json();
+  const profile = await expectStatus(response, 200);
   expect(profile.role).toBe("member");
   expect(profile.tenant.name).toBe("Northwind Supply");
 });

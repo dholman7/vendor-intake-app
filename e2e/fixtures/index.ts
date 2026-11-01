@@ -1,39 +1,42 @@
-import path from "node:path";
-
+// The one import for every spec: fixtures, page objects, data factory, and types.
+// Conventions for using them are in ../AGENTS.md.
+import AxeBuilder from "@axe-core/playwright";
 import { test as base, expect, type APIRequestContext, type Page } from "@playwright/test";
 
 import { API_URL } from "../playwright.config";
-
-export const PASSWORD = "demo-password";
-export const USERS = {
-  member: "member@northwind.test",
-  reviewer: "reviewer@northwind.test",
-  admin: "admin@northwind.test",
-  otherTenant: "member@globex.test",
-} as const;
-export type Persona = keyof typeof USERS;
-
-export const SAMPLES = path.resolve(__dirname, "../../samples");
-export const sample = (file: string) => path.join(SAMPLES, file);
-
-/** Vendor names must be unique per tenant, and tests share one database. */
-export function uniqueName(prefix: string): string {
-  return `${prefix} ${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
-}
+import { Factory } from "./factory";
+import { expectStatus } from "./http";
+import { pagesFor, type Pages } from "./pages";
+import { PASSWORD, USERS, type Persona } from "./users";
 
 async function tokenFor(request: APIRequestContext, persona: Persona): Promise<string> {
   const response = await request.post(`${API_URL}/api/auth/login`, {
     data: { email: USERS[persona], password: PASSWORD },
   });
-  expect(response.status(), `sign in as ${persona}`).toBe(200);
-  return ((await response.json()) as { access_token: string }).access_token;
+  return (await expectStatus<{ access_token: string }>(response, 200)).access_token;
 }
+
+/** Signs a browser context in by setting the session cookie, skipping the sign-in form. */
+async function signInPage(page: Page, persona: Persona) {
+  // Through the web origin so the cookie lands on the domain the browser uses.
+  await expectStatus(await page.request.post("/api/auth/login", { data: { email: USERS[persona], password: PASSWORD } }), 200);
+}
+
+export type SignedInPage = Pages & { page: Page };
 
 interface Fixtures {
   /** API client authenticated as a seeded persona, e.g. `await apiAs("reviewer")`. */
   apiAs: (persona: Persona) => Promise<APIRequestContext>;
-  /** Signs the browser in by setting the session cookie, skipping the sign-in form. */
+  /** Signs the test's own `page` in as a persona. */
   signIn: (persona: Persona) => Promise<void>;
+  /** A separate signed-in browser page, for tests where two roles act, e.g. `await pageAs("reviewer")`. */
+  pageAs: (persona: Persona) => Promise<SignedInPage>;
+  /** Builds vendors, documents, and reviews through the API. */
+  factory: Factory;
+  /** Page objects bound to the test's own `page`. */
+  pages: Pages;
+  /** Accessibility scan: serious and critical WCAG 2.1 AA violations on a page. */
+  a11y: { seriousViolations: (page?: Page) => Promise<string[]> };
 }
 
 export const test = base.extend<Fixtures>({
@@ -52,15 +55,44 @@ export const test = base.extend<Fixtures>({
   },
 
   signIn: async ({ page }, use) => {
+    await use((persona) => signInPage(page, persona));
+  },
+
+  pageAs: async ({ browser }, use) => {
+    const contexts: Awaited<ReturnType<typeof browser.newContext>>[] = [];
     await use(async (persona) => {
-      // Through the web origin so the cookie lands on the domain the browser uses.
-      const response = await page.request.post("/api/auth/login", {
-        data: { email: USERS[persona], password: PASSWORD },
-      });
-      expect(response.status(), `sign in as ${persona}`).toBe(200);
+      const context = await browser.newContext();
+      contexts.push(context);
+      const page = await context.newPage();
+      await signInPage(page, persona);
+      return { page, ...pagesFor(page) };
+    });
+    await Promise.all(contexts.map((c) => c.close()));
+  },
+
+  factory: async ({ apiAs }, use) => {
+    await use(new Factory(apiAs));
+  },
+
+  pages: async ({ page }, use) => {
+    await use(pagesFor(page));
+  },
+
+  a11y: async ({ page }, use) => {
+    await use({
+      seriousViolations: async (target = page) => {
+        const results = await new AxeBuilder({ page: target }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+        return results.violations
+          .filter((v) => v.impact === "serious" || v.impact === "critical")
+          .map((v) => `${v.id}: ${v.help} (${v.nodes.length} nodes)`);
+      },
     });
   },
 });
 
-export { expect };
-export type { Page };
+export { expect, expectStatus, PASSWORD, USERS };
+export { DOCUMENT_KINDS, sample, uniqueName } from "./factory";
+export type { Document, DocumentKind, Extraction, Vendor } from "./factory";
+export { KIND_LABELS } from "./pages";
+export type { Pages } from "./pages";
+export type { APIRequestContext, Page, Persona };
