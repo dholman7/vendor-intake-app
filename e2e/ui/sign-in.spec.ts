@@ -10,7 +10,7 @@ test("member signs in with the form and lands on vendors", async ({ page, pages 
   // Assert
   await expect(page).toHaveURL(/\/vendors$/);
   await expect(pages.vendors.heading).toBeVisible();
-  await expect(page.getByText("Morgan Member")).toBeVisible();
+  await expect(pages.shell.currentUser("Morgan Member")).toBeVisible();
 });
 
 test("wrong password shows an error and stays on sign in", async ({ page, pages }) => {
@@ -25,14 +25,23 @@ test("wrong password shows an error and stays on sign in", async ({ page, pages 
   await expect(page).toHaveURL(/\/login/);
 });
 
-test("signed-out visitors are sent to sign in and returned afterwards", async ({ page, pages }) => {
+test("signed-out visitors are sent to sign in, remembering where they were going", async ({ page, pages }) => {
   // Act
   await pages.newVendor.goto();
 
   // Assert
   await expect(page).toHaveURL(/\/login\?next=%2Fvendors%2Fnew/);
+});
+
+test("signing in returns visitors to where they were going", async ({ pages }) => {
+  // Arrange
+  await pages.newVendor.goto(); // redirects to /login?next=/vendors/new
+
+  // Act
   await pages.signIn.fillDemoAccount("member");
   await pages.signIn.submitButton.click();
+
+  // Assert
   await expect(pages.newVendor.heading).toBeVisible();
 });
 

@@ -24,13 +24,13 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-2. Arrange through the API, not the UI.** Use `factory` to build state, then spend the test's own lines on the behavior under test. Drive the UI only for the steps the test is about.
 
-**PW-3. UI goes through page objects.** Use `pages.*` locators and actions. When a screen or control has no page object entry, add one with a role, label, or text locator. Don't write the locator inline in the spec.
+**PW-3. UI goes through page objects** (lint). Use `pages.*` locators and actions, including for assertions, and navigate with a page object's `goto()`. When a screen or control has no page object entry, add one with a role, label, or text locator. Don't write the locator inline in the spec.
 
 **PW-4. No credentials in specs** (lint). Use a persona: `apiAs`, `signIn`, `pageAs`. UI specs never post to `/api/auth/login`. The one exception is a test of signing in itself, which uses `USERS` and `PASSWORD`.
 
 **PW-5. No fixed waits** (lint). Use web-first assertions (`await expect(locator).toBeVisible()`), and `expect.poll` for background work such as document extraction. Never use `waitForTimeout`, `networkidle`, or `force`.
 
-**PW-6. One import** (lint). Everything comes from `../fixtures`, types included; no inline `import("...")` types.
+**PW-6. One import** (lint). Everything from the test framework and this suite comes from `../fixtures`, types included; no inline `import("...")` types. Node built-ins such as `node:fs` are fine.
 
 **PW-7. Role, label, and text locators only** (lint). No CSS or XPath. If an element can't be found by role or label, fix its accessibility in the app.
 
@@ -38,11 +38,13 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-9. Status assertions carry the body** (lint). Use `expectStatus(response, 201)`, never a bare `expect(response.status())`.
 
-**PW-10. One behavior per test, in Arrange, Act, Assert order**, each step marked with a comment. A test from a story carries its tag: `test("...", { tag: "@KAN-12" }, ...)`.
+**PW-10. One behavior per test, in Arrange, Act, Assert order**, each step marked with a comment. A test from a story carries its tag: `test("...", { tag: "@KAN-12" }, ...)`. The exception is a journey test that follows one user flow end to end, across roles if it must, such as the member-to-reviewer flow in `ui/onboarding.spec.ts`: keep one per flow and say so in a comment.
 
 **PW-11. Tests don't share data.** Every test creates what it needs, using `uniqueName` for anything unique such as vendor names. Only the seeded personas may be assumed to exist.
 
 **PW-12. Assert the stored outcome, not just the response.** When a story says something is saved, re-read it (for example `factory.extraction(id)`), because a response can echo a value that was never stored.
+
+**PW-13. Check every setup step** (lint, partly). A request made while arranging a test asserts its status, through `expectStatus` or a `factory` method, which already does. An unchecked failure surfaces later as a confusing one: a wrong row count instead of "vendor creation returned 422". Lint catches a response that's discarded; a response that's kept but never status-checked needs review.
 
 ## Layout
 

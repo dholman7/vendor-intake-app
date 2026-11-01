@@ -1,7 +1,7 @@
 // The core journey across both roles: features/documents.feature and features/review.feature.
 import { DOCUMENT_KINDS, expect, test, uniqueName } from "../fixtures";
 
-test("member submits a vendor and a reviewer approves it", async ({ page, pages, pageAs, signIn }) => {
+test("member submits a vendor and a reviewer approves it", async ({ pages, pageAs, signIn }) => {
   // Arrange: the whole member journey runs through the UI, since it is what this test covers
   await signIn("member");
   const name = uniqueName("Harborline");
@@ -10,7 +10,7 @@ test("member submits a vendor and a reviewer approves it", async ({ page, pages,
   await expect(pages.vendor.heading(name)).toBeVisible();
   for (const kind of DOCUMENT_KINDS) await pages.vendor.upload(kind);
   await pages.vendor.waitUntilReadyToSubmit();
-  const vendorUrl = page.url();
+  const vendorId = pages.vendor.idFromUrl();
 
   // Act: member submits
   await pages.vendor.submitButton.click();
@@ -23,9 +23,9 @@ test("member submits a vendor and a reviewer approves it", async ({ page, pages,
   await expect(reviewer.reviewQueue.card(name)).toBeHidden();
 
   // Assert
-  await page.goto(vendorUrl);
+  await pages.vendor.goto(vendorId);
   await expect(pages.vendor.status("Approved")).toBeVisible();
-  await expect(page.getByText("Vendor approved")).toBeVisible();
+  await expect(pages.vendor.approvedNotice).toBeVisible();
 });
 
 test("low-confidence fields are visible before submitting", async ({ pages, signIn, factory }) => {
@@ -39,12 +39,11 @@ test("low-confidence fields are visible before submitting", async ({ pages, sign
   await pages.vendor.goto(vendor.id);
 
   // Assert
-  const insurance = pages.vendor.document("insurance_certificate");
-  await expect(insurance.getByRole("meter", { name: "Expires confidence" })).toHaveAttribute("aria-valuenow", "30");
-  await expect(insurance.getByText("Not found")).toHaveCount(2);
+  await expect(pages.vendor.confidence("Expires", "insurance_certificate")).toHaveAttribute("aria-valuenow", "30");
+  await expect(pages.vendor.notFound("insurance_certificate")).toHaveCount(2);
 });
 
-test("a reviewer's requested changes reach the member", async ({ page, pages, pageAs, signIn, factory }) => {
+test("a reviewer's requested changes reach the member", async ({ pages, pageAs, signIn, factory }) => {
   // Arrange
   const { vendor } = await factory.vendorInReview();
   await signIn("member");
@@ -57,7 +56,7 @@ test("a reviewer's requested changes reach the member", async ({ page, pages, pa
 
   // Assert
   await pages.vendor.goto(vendor.id);
-  await expect(page.getByText("A reviewer requested changes.")).toBeVisible();
-  await expect(page.getByText("Reviewer note: Tax ID does not match the IRS letter.")).toBeVisible();
-  await expect(page.getByText("Still needed: W-9")).toBeVisible();
+  await expect(pages.vendor.changesRequestedNotice).toBeVisible();
+  await expect(pages.vendor.reviewerNote("Tax ID does not match the IRS letter.")).toBeVisible();
+  await expect(pages.vendor.stillNeeded(["w9"])).toBeVisible();
 });
