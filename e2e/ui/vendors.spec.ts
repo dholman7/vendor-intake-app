@@ -4,7 +4,7 @@ test.beforeEach(async ({ signIn }) => {
   await signIn("member");
 });
 
-test("create a vendor and land on its page as a draft", async ({ page, pages }) => {
+test("create a vendor and land on its page as a draft", async ({ pages }) => {
   // Arrange
   const name = uniqueName("Acme Freight");
   await pages.newVendor.goto();
@@ -15,10 +15,10 @@ test("create a vendor and land on its page as a draft", async ({ page, pages }) 
   // Assert
   await expect(pages.vendor.heading(name)).toBeVisible();
   await expect(pages.vendor.status("Draft")).toBeVisible();
-  await expect(page.getByText("Still needed: W-9, Insurance certificate, Contract")).toBeVisible();
+  await expect(pages.vendor.stillNeeded(["w9", "insurance_certificate", "contract"])).toBeVisible();
 });
 
-test("a duplicate name is reported on the name field", async ({ page, pages, factory }) => {
+test("a duplicate name is reported on the name field", async ({ pages, factory }) => {
   // Arrange
   const { name } = await factory.vendor({ name: uniqueName("Duplicate Co") });
   await pages.newVendor.goto();
@@ -28,7 +28,7 @@ test("a duplicate name is reported on the name field", async ({ page, pages, fac
 
   // Assert
   await expect(pages.newVendor.name).toHaveAttribute("aria-invalid", "true");
-  await expect(page.getByText(/already exists/)).toBeVisible();
+  await expect(pages.newVendor.name).toHaveAccessibleDescription(/already exists/);
 });
 
 test("search narrows the vendor list", async ({ page, pages, factory }) => {

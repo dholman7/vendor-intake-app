@@ -23,6 +23,11 @@ export class AppShell {
     this.signOutButton = page.getByRole("button", { name: "Sign out" });
     this.alert = page.getByRole("main").getByRole("alert");
   }
+
+  /** The signed-in person's display name in the header. */
+  currentUser(name: string): Locator {
+    return this.page.getByText(name);
+  }
 }
 
 export class SignInPage {
@@ -105,13 +110,33 @@ export class NewVendorPage {
 
 export class VendorPage {
   readonly submitButton: Locator;
+  readonly approvedNotice: Locator;
+  readonly changesRequestedNotice: Locator;
 
   constructor(readonly page: Page) {
     this.submitButton = page.getByRole("button", { name: "Submit for review" });
+    this.approvedNotice = page.getByText("Vendor approved");
+    this.changesRequestedNotice = page.getByText("A reviewer requested changes.");
   }
 
   async goto(vendorId: string) {
     await this.page.goto(`/vendors/${vendorId}`);
+  }
+
+  /** The vendor ID from the current URL, after creating a vendor through the form. */
+  idFromUrl(): string {
+    const id = new URL(this.page.url()).pathname.split("/").pop();
+    if (!id) throw new Error(`not on a vendor page: ${this.page.url()}`);
+    return id;
+  }
+
+  reviewerNote(note: string): Locator {
+    return this.page.getByText(`Reviewer note: ${note}`);
+  }
+
+  /** The summary of documents still to upload, e.g. stillNeeded(["w9"]). */
+  stillNeeded(kinds: DocumentKind[]): Locator {
+    return this.page.getByText(`Still needed: ${kinds.map((k) => KIND_LABELS[k]).join(", ")}`);
   }
 
   heading(name: string): Locator {
@@ -127,8 +152,14 @@ export class VendorPage {
     return this.page.getByRole("region", { name: KIND_LABELS[kind] });
   }
 
-  confidence(fieldLabel: string): Locator {
-    return this.page.getByRole("meter", { name: `${fieldLabel} confidence` });
+  confidence(fieldLabel: string, kind?: DocumentKind): Locator {
+    const scope = kind ? this.document(kind) : this.page;
+    return scope.getByRole("meter", { name: `${fieldLabel} confidence` });
+  }
+
+  /** Fields extraction couldn't read, within one document. */
+  notFound(kind: DocumentKind): Locator {
+    return this.document(kind).getByText("Not found");
   }
 
   async upload(kind: DocumentKind, file = `${kind}.txt`) {
