@@ -1,44 +1,41 @@
-import fs from "node:fs";
+import { readFileSync } from "node:fs";
 
-import { expect, sample, test, uniqueName } from "../../fixtures";
+import { expect, expectStatus, sample, test } from "../../fixtures";
 
-// file, declared type, expected status, content type the server should store (from the extension)
-const rows: [string, string, number, string | null][] = [
-  ["w9.TXT", "text/plain", 201, "text/plain"],
-  ["w9.txt", "application/octet-stream", 201, "text/plain"],
-  ["w9.png", "application/pdf", 415, null],
+// The server takes a document's content type from its extension, never from the client.
+const accepted: [file: string, declared: string][] = [
+  ["w9.TXT", "text/plain"],
+  ["w9.txt", "application/octet-stream"],
 ];
 
-for (const [file, declared, status, stored] of rows) {
-  test(
-    `upload ${file} declared as ${declared} returns ${status}`,
-    { tag: "@KAN-3" },
-    async ({ apiAs }) => {
-      // Arrange: a member and a draft vendor
-      const member = await apiAs("member");
-      const createRes = await member.post("/api/vendors", {
-        data: { name: uniqueName("KAN-3 Vendor"), category: "services", contact_email: "ops@kan3.example" },
-      });
-      expect(createRes.status(), await createRes.text()).toBe(201);
-      const vendor = await createRes.json();
+for (const [file, declared] of accepted) {
+  test(`upload ${file} declared as ${declared} is stored as text/plain`, { tag: "@KAN-3" }, async ({ apiAs, factory }) => {
+    // Arrange
+    const member = await apiAs("member");
+    const vendor = await factory.vendor();
 
-      // Act: upload the sample bytes under the row's filename and declared type
-      const uploadRes = await member.post(`/api/vendors/${vendor.id}/documents`, {
-        multipart: {
-          kind: "w9",
-          file: { name: file, mimeType: declared, buffer: fs.readFileSync(sample("w9.txt")) },
-        },
-      });
+    // Act
+    const response = await member.post(`/api/vendors/${vendor.id}/documents`, {
+      multipart: { kind: "w9", file: { name: file, mimeType: declared, buffer: readFileSync(sample("w9.txt")) } },
+    });
 
-      // Assert
-      const body = await uploadRes.text();
-      expect(uploadRes.status(), body).toBe(status);
-      if (status === 415) {
-        expect(JSON.parse(body).error.code, body).toBe("unsupported_type");
-      }
-      if (stored) {
-        expect(JSON.parse(body).content_type, body).toBe(stored);
-      }
-    },
-  );
+    // Assert
+    const document = await expectStatus(response, 201);
+    expect(document.content_type).toBe("text/plain");
+  });
 }
+
+test("upload w9.png declared as application/pdf is refused", { tag: "@KAN-3" }, async ({ apiAs, factory }) => {
+  // Arrange
+  const member = await apiAs("member");
+  const vendor = await factory.vendor();
+
+  // Act
+  const response = await member.post(`/api/vendors/${vendor.id}/documents`, {
+    multipart: { kind: "w9", file: { name: "w9.png", mimeType: "application/pdf", buffer: readFileSync(sample("w9.txt")) } },
+  });
+
+  // Assert
+  const body = await expectStatus(response, 415);
+  expect(body.error.code).toBe("unsupported_type");
+});
