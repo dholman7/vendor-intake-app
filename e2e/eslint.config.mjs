@@ -54,6 +54,13 @@ const pageObjectsOnly = [
   },
 ];
 
+const exactControlNames = {
+  selector:
+    "CallExpression[callee.property.name='getByRole'] > ObjectExpression:not(:has(Property[key.name='exact'])):has(Property[key.name='name'][value.type='Literal'])",
+  message:
+    'PW-14: match a control\'s name exactly ({ name: "...", exact: true }). By default "Next" also matches "Open Next.js Dev Tools".',
+};
+
 const noInlineTypeImports = {
   selector: "TSImportType",
   message: "PW-6: import types from ../fixtures instead of inline import(\"...\") types.",
@@ -89,6 +96,10 @@ export default tseslint.config(
     },
   },
   {
+    files: ["fixtures/**/*.ts"],
+    rules: { "no-restricted-syntax": ["error", exactControlNames] },
+  },
+  {
     files: ["api/**/*.spec.ts"],
     rules: {
       "no-restricted-syntax": [
@@ -112,6 +123,7 @@ export default tseslint.config(
         noInlineTypeImports,
         statusWithBody,
         checkedSetup,
+        exactControlNames,
         ...pageObjectsOnly,
         {
           selector: "Literal[value='/api/auth/login']",
