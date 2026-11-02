@@ -18,9 +18,9 @@ export class AppShell {
   readonly alert: Locator;
 
   constructor(readonly page: Page) {
-    this.nav = page.getByRole("navigation", { name: "Main" });
-    this.reviewQueueLink = this.nav.getByRole("link", { name: "Review queue" });
-    this.signOutButton = page.getByRole("button", { name: "Sign out" });
+    this.nav = page.getByRole("navigation", { name: "Main", exact: true });
+    this.reviewQueueLink = this.nav.getByRole("link", { name: "Review queue", exact: true });
+    this.signOutButton = page.getByRole("button", { name: "Sign out", exact: true });
     this.alert = page.getByRole("main").getByRole("alert");
   }
 
@@ -39,7 +39,7 @@ export class SignInPage {
   constructor(readonly page: Page) {
     this.email = page.getByLabel("Email");
     this.password = page.getByLabel("Password");
-    this.submitButton = page.getByRole("button", { name: "Sign in" });
+    this.submitButton = page.getByRole("button", { name: "Sign in", exact: true });
     this.error = page.getByRole("main").getByRole("alert");
   }
 
@@ -66,7 +66,7 @@ export class VendorListPage {
   readonly rows: Locator;
 
   constructor(readonly page: Page) {
-    this.heading = page.getByRole("heading", { name: "Vendors", level: 1 });
+    this.heading = page.getByRole("heading", { name: "Vendors", level: 1, exact: true });
     this.search = page.getByLabel("Search vendors");
     this.table = page.getByRole("table");
     this.rows = this.table.getByRole("row");
@@ -89,11 +89,11 @@ export class NewVendorPage {
   readonly createButton: Locator;
 
   constructor(readonly page: Page) {
-    this.heading = page.getByRole("heading", { name: "New vendor" });
+    this.heading = page.getByRole("heading", { name: "New vendor", exact: true });
     this.name = page.getByLabel("Vendor name");
     this.category = page.getByLabel("Category");
     this.contactEmail = page.getByLabel("Contact email");
-    this.createButton = page.getByRole("button", { name: "Create vendor" });
+    this.createButton = page.getByRole("button", { name: "Create vendor", exact: true });
   }
 
   async goto() {
@@ -114,7 +114,7 @@ export class VendorPage {
   readonly changesRequestedNotice: Locator;
 
   constructor(readonly page: Page) {
-    this.submitButton = page.getByRole("button", { name: "Submit for review" });
+    this.submitButton = page.getByRole("button", { name: "Submit for review", exact: true });
     this.approvedNotice = page.getByText("Vendor approved");
     this.changesRequestedNotice = page.getByText("A reviewer requested changes.");
   }
@@ -176,7 +176,7 @@ export class ReviewQueuePage {
   readonly heading: Locator;
 
   constructor(readonly page: Page) {
-    this.heading = page.getByRole("heading", { name: "Review queue" });
+    this.heading = page.getByRole("heading", { name: "Review queue", exact: true });
   }
 
   async goto() {
@@ -201,7 +201,7 @@ export class ReviewQueuePage {
     const card = this.card(vendorName);
     await card.getByRole("button", { name: `Request changes to ${KIND_LABELS[kind]}` }).click();
     await card.getByLabel("What should the member fix?").fill(note);
-    await card.getByRole("button", { name: "Send back to member" }).click();
+    await card.getByRole("button", { name: "Send back to member", exact: true }).click();
   }
 }
 

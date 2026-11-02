@@ -46,6 +46,8 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-13. Check every setup step** (lint, partly). A request made while arranging a test asserts its status, through `expectStatus` or a `factory` method, which already does. An unchecked failure surfaces later as a confusing one: a wrong row count instead of "vendor creation returned 422". Lint catches a response that's discarded; a response that's kept but never status-checked needs review.
 
+**PW-14. Name controls exactly** (lint). A `getByRole` with a fixed name passes `exact: true`, in page objects as well as specs. Playwright matches names by substring by default, so `{ name: "Next" }` also matches Next.js's "Open Next.js Dev Tools" button, which `next dev` adds to every page. That broke a pager test on Linux CI.
+
 ## Layout
 
 ```
