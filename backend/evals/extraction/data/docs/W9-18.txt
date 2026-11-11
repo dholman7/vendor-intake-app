@@ -1,0 +1,7 @@
+Form W-9  Request for Taxpayer Identification Number and Certification
+1 Name (as shown on your income tax return): Priya Raman
+2 Business name/disregarded entity name, if different: Delta Partners
+3 Federal tax classification:
+[x] Individual/sole proprietor
+[ ] C Corporation
+Part I  Social security number: 925-33-2774

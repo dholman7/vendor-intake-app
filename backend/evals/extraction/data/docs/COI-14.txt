@@ -1,0 +1,4 @@
+Insurer: Northwind Assurance Group
+Policy Number: NO-80-9014
+Coverage Amount: $2,000,000
+Valid through: January 7, 2027

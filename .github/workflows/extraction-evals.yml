@@ -33,6 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
+        # Explicit bash runs with pipefail; the implicit default doesn't, and `| tee` below would
+        # then hide a failing gate behind tee's exit code.
+        shell: bash
         working-directory: backend
     steps:
       - uses: actions/checkout@v7
@@ -47,7 +50,11 @@ jobs:
       - run: uv run mypy evals
       - run: uv run pytest evals
       - name: The eval set is what the generator produces
-        run: uv run python -m evals.extraction generate && git diff --exit-code evals/extraction/data
+        run: |
+          uv run python -m evals.extraction generate
+          # Changed, deleted, or untracked files all fail; git diff alone sees only the first.
+          test -z "$(git status --porcelain -- evals/extraction/data)" || {
+            git status --short -- evals/extraction/data; exit 1; }
       - name: Replay the current prompt on held-out and adversarial documents
         run: >-
           uv run python -m evals.extraction run --split heldout,adversarial --trials 3

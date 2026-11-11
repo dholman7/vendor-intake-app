@@ -1,0 +1,4 @@
+Insurer: Liberty Ridge Indemnity
+Policy Number: LI-80-5429
+Coverage Amount: $1,000,000
+Policy expires: September 7, 2027
