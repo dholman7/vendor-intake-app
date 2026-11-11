@@ -18,6 +18,8 @@ out/
 # Runtime data
 data/
 backend/data/
+# The extraction eval set is source, not runtime data.
+!backend/evals/extraction/data/
 
 # Test outputs and reports (never committed)
 test-results/
