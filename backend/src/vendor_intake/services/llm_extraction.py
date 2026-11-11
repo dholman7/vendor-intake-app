@@ -112,7 +112,7 @@ V2 = Prompt(
     aliases={"tax_id_last4": "tax_id"},
 )
 PROMPTS = {p.version: p for p in (V1, V2)}
-CURRENT = V2
+CURRENT = V1
 # Eval recordings are keyed by this.
 PROMPT_VERSION = CURRENT.version
 
