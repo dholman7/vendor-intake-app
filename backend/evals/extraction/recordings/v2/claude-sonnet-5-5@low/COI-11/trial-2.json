@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.96,
+      "quote": "$3,000,000 per occurrence",
+      "value": "3000000"
+    },
+    "expiry_date": {
+      "confidence": 0.9,
+      "quote": "remains in force until June 14, 2027",
+      "value": "2027-06-14"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Pacific Shield Insurance Company",
+      "value": "Pacific Shield Insurance Company"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "PA-70-2822",
+      "value": "PA-70-2822"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3333,
+    "output_tokens": 179
+  }
+}

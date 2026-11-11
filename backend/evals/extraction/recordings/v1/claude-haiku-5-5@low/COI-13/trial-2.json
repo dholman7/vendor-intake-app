@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.9,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Limits: $5M per occurrence / $10M aggregate.",
+      "value": "5000000"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "Coverage runs December 15, 2026 through December 14, 2027.",
+      "value": "2027-12-14"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Carrier: Pacific Shield Insurance Company.",
+      "value": "Pacific Shield Insurance Company"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy PA-44-1087.",
+      "value": "PA-44-1087"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1760,
+    "output_tokens": 407
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.46,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Northgate Health Inc. (\"Vendor\")",
+      "value": "Northgate Health Inc."
+    },
+    "effective_date": {
+      "confidence": 0.96,
+      "quote": "entered into as of June 27, 2026 (the \"Effective Date\")",
+      "value": "2026-06-27"
+    },
+    "expiry_date": {
+      "confidence": 0.94,
+      "quote": "ends on June 26, 2027",
+      "value": "2027-06-26"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1439,
+    "output_tokens": 155
+  }
+}

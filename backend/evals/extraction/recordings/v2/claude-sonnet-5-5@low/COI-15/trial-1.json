@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.97,
+      "quote": "providing $2,000,000 per occurrence",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "remains in force\nuntil July 11, 2027",
+      "value": "2027-07-11"
+    },
+    "insurer": {
+      "confidence": 0.96,
+      "quote": "commercial general liability policy with Granite State Casualty",
+      "value": "Granite State Casualty"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "policy\nnumber GR-49-5462",
+      "value": "GR-49-5462"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3332,
+    "output_tokens": 191
+  }
+}

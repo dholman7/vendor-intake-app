@@ -192,7 +192,7 @@ def per_document(rows: list[dict[str, Any]], metric: str) -> dict[str, Fraction]
         if metric == "confident_wrong":
             if r["value"] is None:
                 continue
-            hit = not r["correct"] and r["confidence"] >= CONFIDENT
+            hit = _confident_wrong(r)
         else:
             hit = r["correct"]
         totals[r["doc"]] += 1
@@ -203,15 +203,66 @@ def per_document(rows: list[dict[str, Any]], metric: str) -> dict[str, Fraction]
 GATED = {"correct": True, "confident_wrong": False}
 
 
+def _confident_wrong(row: dict[str, Any]) -> bool:
+    return row["value"] is not None and not row["correct"] and row["confidence"] >= CONFIDENT
+
+
+def _key(row: dict[str, Any]) -> tuple[str, int, str]:
+    return row["doc"], row["trial"], row["field"]
+
+
+def _turned_wrong(before: dict[str, Any], after: dict[str, Any]) -> bool:
+    return bool(before["correct"]) and not after["correct"]
+
+
+def _turned_confident_wrong(before: dict[str, Any], after: dict[str, Any]) -> bool:
+    return not _confident_wrong(before) and _confident_wrong(after)
+
+
+# The meta fields that, when equal, mean both runs scored the same recorded outputs.
+SAME_RECORDINGS = ("prompt_version", "model", "effort", "trials", "splits")
+
+
 def gate(
     baseline: dict[str, Any], current: dict[str, Any], min_effect: float = 0.05
 ) -> list[dict[str, Any]]:
-    """Paired by document, the same test agent-eval-gate uses: a metric regresses when p < 0.05
-    and the mean per-document change is at least `min_effect` in the bad direction."""
+    """Two modes, like agent-eval-gate's deterministic and model-backed agents.
+
+    Same recordings (an unchanged prompt, re-scored by changed code): no sampling noise, so any
+    field that got worse fails, whether it turned wrong or turned confidently wrong. A single new
+    confidently wrong value is the failure that matters most, and a statistical test over 40
+    documents would wave it through.
+
+    Different recordings (a new prompt or model): paired by document, the same test
+    agent-eval-gate uses. A metric regresses when p < 0.05 and the mean per-document change is
+    at least `min_effect` in the bad direction.
+    """
     if baseline["meta"]["splits"] != current["meta"]["splits"]:
         raise ValueError(
             f"different splits: {baseline['meta']['splits']} vs {current['meta']['splits']}"
         )
+    if all(baseline["meta"][k] == current["meta"][k] for k in SAME_RECORDINGS):
+        before = {_key(r): r for r in baseline["fields"]}
+        checks = []
+        for metric, worse in (
+            ("field accuracy", _turned_wrong),
+            ("confidently wrong", _turned_confident_wrong),
+        ):
+            got_worse = sorted(
+                f"{r['doc']}/{r['field']}#{r['trial']}"
+                for r in current["fields"]
+                if _key(r) in before and worse(before[_key(r)], r)
+            )
+            checks.append(
+                {
+                    "metric": metric,
+                    "mode": "exact",
+                    "fields_worse": len(got_worse),
+                    "examples": got_worse[:5],
+                    "regressed": bool(got_worse),
+                }
+            )
+        return checks
     checks = []
     for metric, higher_is_better in GATED.items():
         base = per_document(baseline["fields"], metric)
@@ -221,6 +272,7 @@ def gate(
         checks.append(
             {
                 "metric": "field accuracy" if metric == "correct" else "confidently wrong",
+                "mode": "paired",
                 "documents": len(diffs),
                 "mean_change": round(mean, 4),
                 "p_value": round(p, 4),

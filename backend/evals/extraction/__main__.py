@@ -114,12 +114,25 @@ def cmd_gate(args: argparse.Namespace) -> int:
     baseline = json.loads(Path(args.baseline).read_text())
     current = json.loads(Path(args.current).read_text())
     checks = score.gate(baseline, current, args.min_effect)
-    print("| Metric | Documents | Mean change | p | Result |\n|---|---|---|---|---|")
+    print("| Metric | Mode | Detail | Result |\n|---|---|---|---|")
     for c in checks:
-        print(
-            f"| {c['metric']} | {c['documents']} | {c['mean_change'] * 100:+.1f} pts"
-            f" | {c['p_value']:.3f} | {'regressed' if c['regressed'] else 'ok'} |"
-        )
+        if c["mode"] == "exact":
+            detail = f"{c['fields_worse']} fields worse" + (
+                f" ({', '.join(c['examples'])})" if c["examples"] else ""
+            )
+        else:
+            detail = (
+                f"{c['documents']} documents, {c['mean_change'] * 100:+.1f} pts,"
+                f" p {c['p_value']:.3f}"
+            )
+        result = "regressed" if c["regressed"] else "ok"
+        print(f"| {c['metric']} | {c['mode']} | {detail} | {result} |")
+    rule = (
+        "Same recordings: any field that got worse fails."
+        if checks[0]["mode"] == "exact"
+        else f"Paired by document: p < 0.05 and at least {args.min_effect * 100:g} points worse."
+    )
+    print(f"\n{rule}")
     failed = any(c["regressed"] for c in checks)
     print("\nGate failed." if failed else "\nGate passed.")
     return 1 if failed else 0

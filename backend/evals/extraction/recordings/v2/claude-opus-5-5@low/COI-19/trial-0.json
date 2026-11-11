@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.96,
+      "quote": "Each occurrence: $3,000,000",
+      "value": "3000000"
+    },
+    "expiry_date": {
+      "confidence": 0.9,
+      "quote": null,
+      "value": null
+    },
+    "insurer": {
+      "confidence": 0.93,
+      "quote": "Insurer A: Granite State Casualty",
+      "value": "Granite State Casualty"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy number: GR-35-7352",
+      "value": "GR-35-7352"
+    }
+  },
+  "served_model": "claude-opus-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3394,
+    "output_tokens": 165
+  }
+}

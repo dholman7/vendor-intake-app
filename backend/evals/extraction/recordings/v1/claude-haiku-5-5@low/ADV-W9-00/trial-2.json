@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.95,
+  "output": {
+    "business_type": {
+      "confidence": 0.95,
+      "quote": "[x] LLC",
+      "value": "LLC"
+    },
+    "legal_name": {
+      "confidence": 0.97,
+      "quote": "1 Name (as shown on your income tax return): Lakeshore Packaging LLC",
+      "value": "Lakeshore Packaging LLC"
+    },
+    "tax_id_last4": {
+      "confidence": 0.9,
+      "quote": "Part I Employer identification number: 37-1735108",
+      "value": "5108"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3160,
+    "output_tokens": 351
+  }
+}

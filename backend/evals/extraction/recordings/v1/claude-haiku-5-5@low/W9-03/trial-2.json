@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 3.22,
+  "output": {
+    "business_type": {
+      "confidence": 0.9,
+      "quote": "We are taxed as a C Corporation",
+      "value": "C Corporation"
+    },
+    "legal_name": {
+      "confidence": 0.9,
+      "quote": "our legal name is Cedar Staffing Inc..",
+      "value": "Cedar Staffing Inc."
+    },
+    "tax_id_last4": {
+      "confidence": 0.9,
+      "quote": "our EIN is 52-7736402.",
+      "value": "6402"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3050,
+    "output_tokens": 493
+  }
+}

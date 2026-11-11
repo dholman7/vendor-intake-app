@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.74,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Each occurrence: $1,000,000",
+      "value": "1000000"
+    },
+    "expiry_date": {
+      "confidence": 0.97,
+      "quote": "Policy exp: 07/23/2027",
+      "value": "2027-07-23"
+    },
+    "insurer": {
+      "confidence": 0.9,
+      "quote": "Insurer A: Granite State Casualty",
+      "value": "Granite State Casualty"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy number: GR-70-7186",
+      "value": "GR-70-7186"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1840,
+    "output_tokens": 182
+  }
+}

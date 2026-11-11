@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Acme Labs LLC (\"Vendor\")",
+      "value": "Acme Labs LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "Effective January 15, 2027",
+      "value": "2027-01-15"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "This Agreement continues until terminated by either party on 90 days' written notice.",
+      "value": null
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3003,
+    "output_tokens": 148
+  }
+}

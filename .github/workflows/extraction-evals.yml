@@ -1,0 +1,59 @@
+name: Extraction evals
+
+# Gates changes to the Claude extraction backend with no API key. A pull request carries its own
+# evidence: recordings of the model's outputs for the current prompt version. CI re-scores them
+# with the pull request's normalization and grounding code and fails if accuracy, or the share of
+# confidently wrong values, regresses against the published baseline. A prompt change bumps the
+# version, so it has no recordings until someone runs it live and commits them.
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/src/vendor_intake/services/extraction.py
+      - backend/src/vendor_intake/services/llm_extraction.py
+      - backend/evals/**
+      - backend/pyproject.toml
+      - backend/uv.lock
+      - .github/workflows/extraction-evals.yml
+  pull_request:
+    paths:
+      - backend/src/vendor_intake/services/extraction.py
+      - backend/src/vendor_intake/services/llm_extraction.py
+      - backend/evals/**
+      - backend/pyproject.toml
+      - backend/uv.lock
+      - .github/workflows/extraction-evals.yml
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    name: Replay recorded extractions and gate them
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      # setup-uv publishes only full-version tags (no moving v10), so pin the latest release.
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          working-directory: backend
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - run: uv sync --extra llm --group evals
+      - run: uv run ruff check evals && uv run ruff format --check evals
+      - run: uv run mypy evals
+      - run: uv run pytest evals
+      - name: The eval set is what the generator produces
+        run: uv run python -m evals.extraction generate && git diff --exit-code evals/extraction/data
+      - name: Replay the current prompt on held-out and adversarial documents
+        run: >-
+          uv run python -m evals.extraction run --split heldout,adversarial --trials 3
+          --mode replay --out "$RUNNER_TEMP/current.json" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Gate against the published baseline
+        run: >-
+          uv run python -m evals.extraction gate
+          --baseline evals/extraction/baselines/haiku-heldout.json
+          --current "$RUNNER_TEMP/current.json" | tee -a "$GITHUB_STEP_SUMMARY"

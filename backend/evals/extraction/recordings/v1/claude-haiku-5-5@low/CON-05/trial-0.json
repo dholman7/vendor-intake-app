@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.95,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Cedar Supply LLC (\"Vendor\")",
+      "value": "Cedar Supply LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "entered into as of December 8, 2026 (the \"Effective Date\")",
+      "value": "2026-12-08"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "ends on December 7, 2027",
+      "value": "2027-12-07"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 2998,
+    "output_tokens": 336
+  }
+}

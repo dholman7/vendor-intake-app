@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "business_type": {
+      "confidence": 0.97,
+      "quote": "Business Type: C Corporation",
+      "value": "C Corporation"
+    },
+    "legal_name": {
+      "confidence": 0.95,
+      "quote": "Legal Name: Cedar Health Corp.",
+      "value": "Cedar Health Corp."
+    },
+    "tax_id": {
+      "confidence": 0.97,
+      "quote": "Tax ID: 82-7064790",
+      "value": "827064790"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1418,
+    "output_tokens": 134
+  }
+}

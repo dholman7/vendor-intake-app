@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Acme Packaging Corp. (Supplier)",
+      "value": "Acme Packaging Corp."
+    },
+    "effective_date": {
+      "confidence": 0.93,
+      "quote": "Effective Date: 04/22/2027.",
+      "value": "2027-04-22"
+    },
+    "expiry_date": {
+      "confidence": 0.6,
+      "quote": "Term: 12 months from the Effective Date.",
+      "value": "2028-04-21"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1436,
+    "output_tokens": 149
+  }
+}

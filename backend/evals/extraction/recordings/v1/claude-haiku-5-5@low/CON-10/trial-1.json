@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.51,
+  "output": {
+    "counterparty": {
+      "confidence": 0.95,
+      "quote": "Acme Labs LLC (\"Vendor\")",
+      "value": "Acme Labs LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "Effective January 15, 2027",
+      "value": "2027-01-15"
+    },
+    "expiry_date": {
+      "confidence": 0.9,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 2961,
+    "output_tokens": 264
+  }
+}

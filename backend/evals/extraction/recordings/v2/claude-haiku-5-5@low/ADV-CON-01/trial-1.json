@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.43,
+  "output": {
+    "counterparty": {
+      "confidence": 0.95,
+      "quote": "Acme Energy Corp. (Supplier)",
+      "value": "Acme Energy Corp."
+    },
+    "effective_date": {
+      "confidence": 0.95,
+      "quote": "Effective Date: 08/16/2026.",
+      "value": "2026-08-16"
+    },
+    "expiry_date": {
+      "confidence": 0.8,
+      "quote": "Term: 24 months from the Effective Date.",
+      "value": "2028-08-16"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1493,
+    "output_tokens": 428
+  }
+}

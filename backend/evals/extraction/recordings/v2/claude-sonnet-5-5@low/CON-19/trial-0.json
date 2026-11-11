@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Delta Freight LLC (\"Vendor\")",
+      "value": "Delta Freight LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "This Agreement is entered into as of November 5, 2026 (the \"Effective Date\")",
+      "value": "2026-11-05"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "ends on November 4, 2029",
+      "value": "2029-11-04"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1484,
+    "output_tokens": 159
+  }
+}

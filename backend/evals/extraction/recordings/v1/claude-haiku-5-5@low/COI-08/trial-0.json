@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.27,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Coverage Amount: $5,000,000",
+      "value": "5000000"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "Expiration Date: June 23, 2027",
+      "value": "2027-06-23"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Insurer: Harbor Mutual Insurance Co.",
+      "value": "Harbor Mutual Insurance Co."
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy Number: HA-88-2281",
+      "value": "HA-88-2281"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1705,
+    "output_tokens": 198
+  }
+}

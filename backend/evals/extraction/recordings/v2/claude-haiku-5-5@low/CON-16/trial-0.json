@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.76,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "between Globex Corporation (\"Customer\") and Juniper Labs LLC (\"Vendor\")",
+      "value": "Juniper Labs LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "Effective March 17, 2026",
+      "value": "2026-03-17"
+    },
+    "expiry_date": {
+      "confidence": 0.9,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1441,
+    "output_tokens": 301
+  }
+}

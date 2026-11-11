@@ -129,6 +129,11 @@ def run(
     return _batch(client, jobs, model, effort, prompt)
 
 
+def custom_id(doc_id: str, trial: int) -> str:
+    """A batch request id; the API allows only [a-zA-Z0-9_-], up to 64 characters."""
+    return f"{doc_id}__{trial}"
+
+
 def _batch(
     client: Any, jobs: list[tuple[EvalDoc, int]], model: str, effort: str, prompt: llm.Prompt
 ) -> dict[tuple[str, int], Recording]:
@@ -136,7 +141,7 @@ def _batch(
     batch = client.messages.batches.create(
         requests=[
             {
-                "custom_id": f"{doc.id}~{trial}",
+                "custom_id": custom_id(doc.id, trial),
                 "params": llm.request(
                     doc.kind, doc.content, doc.content_type, model, effort, prompt
                 ),
@@ -148,7 +153,7 @@ def _batch(
         time.sleep(30)
     recordings: dict[tuple[str, int], Recording] = {}
     for result in client.messages.batches.results(batch.id):
-        doc_id, trial = result.custom_id.split("~")
+        doc_id, trial = result.custom_id.rsplit("__", 1)
         if result.result.type == "succeeded":
             recording = _from_message(result.result.message, None)
         else:

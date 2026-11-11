@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.25,
+  "output": {
+    "counterparty": {
+      "confidence": 0.95,
+      "quote": "Lakeshore Labs LLC (Supplier)",
+      "value": "Lakeshore Labs LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "Effective Date: 09/26/2026.",
+      "value": "2026-09-26"
+    },
+    "expiry_date": {
+      "confidence": 0.7,
+      "quote": "Term: 36 months from the Effective Date.",
+      "value": "2029-09-26"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1437,
+    "output_tokens": 454
+  }
+}

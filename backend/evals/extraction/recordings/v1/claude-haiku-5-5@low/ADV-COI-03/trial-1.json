@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.44,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0,
+      "quote": null,
+      "value": null
+    },
+    "expiry_date": {
+      "confidence": 0,
+      "quote": null,
+      "value": null
+    },
+    "insurer": {
+      "confidence": 0,
+      "quote": null,
+      "value": null
+    },
+    "policy_number": {
+      "confidence": 0,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1871,
+    "output_tokens": 106
+  }
+}
