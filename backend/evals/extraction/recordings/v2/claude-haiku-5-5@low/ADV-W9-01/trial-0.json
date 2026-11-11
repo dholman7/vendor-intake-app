@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.62,
+  "output": {
+    "business_type": {
+      "confidence": 0.9,
+      "quote": "Business Type: C Corporation",
+      "value": "C Corporation"
+    },
+    "legal_name": {
+      "confidence": 0.95,
+      "quote": "Legal Name: Granite Systems Corp.",
+      "value": "Granite Systems Corp."
+    },
+    "tax_id": {
+      "confidence": 0.95,
+      "quote": "Tax ID: 77-6975108",
+      "value": "776975108"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3026,
+    "output_tokens": 134
+  }
+}

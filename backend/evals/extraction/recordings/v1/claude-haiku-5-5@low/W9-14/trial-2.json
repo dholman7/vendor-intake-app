@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.05,
+  "output": {
+    "business_type": {
+      "confidence": 0.8,
+      "quote": "Business Type: LLC",
+      "value": "LLC"
+    },
+    "legal_name": {
+      "confidence": 0.95,
+      "quote": "Legal Name: Delta Supply LLC",
+      "value": "Delta Supply LLC"
+    },
+    "tax_id_last4": {
+      "confidence": 0.9,
+      "quote": "Tax ID: 48-4058095",
+      "value": "8095"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 2993,
+    "output_tokens": 325
+  }
+}

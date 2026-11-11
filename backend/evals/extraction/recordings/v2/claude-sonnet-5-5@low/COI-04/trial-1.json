@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.96,
+      "quote": "$5,000,000 per occurrence",
+      "value": "5000000"
+    },
+    "expiry_date": {
+      "confidence": 0.93,
+      "quote": "remains in force until August 8, 2027",
+      "value": "2027-08-08"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Liberty Ridge Indemnity",
+      "value": "Liberty Ridge Indemnity"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "LI-48-8842",
+      "value": "LI-48-8842"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1778,
+    "output_tokens": 179
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "business_type": {
+      "confidence": 0.96,
+      "quote": "[x] Individual/sole proprietor",
+      "value": "Individual"
+    },
+    "legal_name": {
+      "confidence": 0.97,
+      "quote": "1 Name (as shown on your income tax return): Priya Raman",
+      "value": "Priya Raman"
+    },
+    "tax_id": {
+      "confidence": 0.97,
+      "quote": "Part I  Social security number: 527-59-1210",
+      "value": "527591210"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1503,
+    "output_tokens": 140
+  }
+}

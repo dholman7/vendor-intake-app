@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 2.01,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.96,
+      "quote": "Coverage Amount: $2,000,000",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.94,
+      "quote": "Valid through: January 7, 2027",
+      "value": "2027-01-07"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Insurer: Northwind Assurance Group",
+      "value": "Northwind Assurance Group"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy Number: NO-80-9014",
+      "value": "NO-80-9014"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1698,
+    "output_tokens": 186
+  }
+}

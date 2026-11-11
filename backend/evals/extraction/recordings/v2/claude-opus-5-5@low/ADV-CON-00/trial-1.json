@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "counterparty": {
+      "confidence": 0.93,
+      "quote": "Ironwood Health LLC (\"Provider\")",
+      "value": "Ironwood Health LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "effective March 2, 2026",
+      "value": "2026-03-02"
+    },
+    "expiry_date": {
+      "confidence": 0.97,
+      "quote": "expires March 1, 2029",
+      "value": "2029-03-01"
+    }
+  },
+  "served_model": "claude-opus-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3058,
+    "output_tokens": 138
+  }
+}

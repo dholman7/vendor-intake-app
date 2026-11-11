@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.13,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Delta Metals Corp. (\"Vendor\")",
+      "value": "Delta Metals Corp."
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "entered into as of July 17, 2026 (the \"Effective Date\")",
+      "value": "2026-07-17"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "ends on July 16, 2027",
+      "value": "2027-07-16"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1481,
+    "output_tokens": 155
+  }
+}

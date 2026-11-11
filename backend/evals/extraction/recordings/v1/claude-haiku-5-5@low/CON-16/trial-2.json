@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.36,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Juniper Labs LLC (\"Vendor\")",
+      "value": "Juniper Labs LLC"
+    },
+    "effective_date": {
+      "confidence": 0.98,
+      "quote": "Effective March 17, 2026",
+      "value": "2026-03-17"
+    },
+    "expiry_date": {
+      "confidence": 0.9,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1399,
+    "output_tokens": 227
+  }
+}

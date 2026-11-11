@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Each occurrence: $2,000,000",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "Policy exp: 08/30/2027",
+      "value": "2027-08-30"
+    },
+    "insurer": {
+      "confidence": 0.85,
+      "quote": "Insurer A: Liberty Ridge Indemnity",
+      "value": "Liberty Ridge Indemnity"
+    },
+    "policy_number": {
+      "confidence": 0.95,
+      "quote": "Policy number: LI-24-8978",
+      "value": "LI-24-8978"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1891,
+    "output_tokens": 192
+  }
+}

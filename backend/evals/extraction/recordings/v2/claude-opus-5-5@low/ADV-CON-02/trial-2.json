@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "counterparty": {
+      "confidence": 0.96,
+      "quote": "Evergreen Staffing LP (\"Provider\")",
+      "value": "Evergreen Staffing LP"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "effective April 12, 2027",
+      "value": "2027-04-12"
+    },
+    "expiry_date": {
+      "confidence": 0.97,
+      "quote": "expires April 11, 2029",
+      "value": "2029-04-11"
+    }
+  },
+  "served_model": "claude-opus-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1477,
+    "output_tokens": 140
+  }
+}

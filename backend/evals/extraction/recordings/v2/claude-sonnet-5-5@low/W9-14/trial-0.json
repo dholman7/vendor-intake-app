@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "business_type": {
+      "confidence": 0.93,
+      "quote": "Business Type: LLC",
+      "value": "LLC"
+    },
+    "legal_name": {
+      "confidence": 0.95,
+      "quote": "Legal Name: Delta Supply LLC",
+      "value": "Delta Supply LLC"
+    },
+    "tax_id": {
+      "confidence": 0.96,
+      "quote": "Tax ID: 48-4058095",
+      "value": "484058095"
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 2973,
+    "output_tokens": 128
+  }
+}

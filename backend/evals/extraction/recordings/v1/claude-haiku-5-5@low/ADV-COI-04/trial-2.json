@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 2.6,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.9,
+      "quote": "providing $2,000,000 per occurrence",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "remains in force until February 16, 2027",
+      "value": "2027-02-16"
+    },
+    "insurer": {
+      "confidence": 0.95,
+      "quote": "Granite State Casualty",
+      "value": "Granite State Casualty"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "policy number GR-65-2771",
+      "value": "GR-65-2771"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3387,
+    "output_tokens": 458
+  }
+}

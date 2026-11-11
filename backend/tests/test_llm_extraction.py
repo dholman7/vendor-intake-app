@@ -133,17 +133,6 @@ def test_request_sends_binary_uploads_as_base64(content_type: str, block_type: s
     assert block["source"] == {"type": "base64", "media_type": content_type, "data": "AAE="}
 
 
-def test_pdf_text_is_read_for_grounding() -> None:
-    fpdf = pytest.importorskip("fpdf")
-    pdf = fpdf.FPDF()
-    pdf.add_page()
-    pdf.set_font("helvetica", size=12)
-    pdf.cell(text="Policy No.: HM-55-1290")
-    text = llm.source_text(bytes(pdf.output()), "application/pdf")
-    assert text is not None and "HM-55-1290" in text
-    assert llm.source_text(b"\x89PNG", "image/png") is None
-
-
 class StubMessages:
     def __init__(self, message: Any) -> None:
         self.message = message

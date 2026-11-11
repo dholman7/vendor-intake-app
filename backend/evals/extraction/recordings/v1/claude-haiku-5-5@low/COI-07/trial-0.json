@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.95,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.97,
+      "quote": "Coverage Amount: $1,000,000",
+      "value": "1000000"
+    },
+    "expiry_date": {
+      "confidence": 0.97,
+      "quote": "Policy expires: September 7, 2027",
+      "value": "2027-09-07"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Insurer: Liberty Ridge Indemnity",
+      "value": "Liberty Ridge Indemnity"
+    },
+    "policy_number": {
+      "confidence": 0.98,
+      "quote": "Policy Number: LI-80-5429",
+      "value": "LI-80-5429"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1702,
+    "output_tokens": 193
+  }
+}

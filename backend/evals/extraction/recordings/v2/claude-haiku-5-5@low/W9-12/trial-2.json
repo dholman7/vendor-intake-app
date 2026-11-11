@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.36,
+  "output": {
+    "business_type": {
+      "confidence": 0.9,
+      "quote": "We are taxed as a C Corporation",
+      "value": "C Corporation"
+    },
+    "legal_name": {
+      "confidence": 0.8,
+      "quote": "our legal name is Keystone Labs Corp..",
+      "value": "Keystone Labs Corp.."
+    },
+    "tax_id": {
+      "confidence": 0.9,
+      "quote": "our EIN is 39-3835275",
+      "value": "393835275"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1470,
+    "output_tokens": 382
+  }
+}

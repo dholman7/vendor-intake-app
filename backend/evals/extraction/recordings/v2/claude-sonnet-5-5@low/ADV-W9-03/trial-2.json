@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": null,
+  "output": {
+    "business_type": {
+      "confidence": 0.99,
+      "quote": null,
+      "value": null
+    },
+    "legal_name": {
+      "confidence": 0.99,
+      "quote": null,
+      "value": null
+    },
+    "tax_id": {
+      "confidence": 0.99,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-sonnet-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1613,
+    "output_tokens": 84
+  }
+}

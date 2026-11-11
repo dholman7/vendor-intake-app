@@ -6,8 +6,8 @@ BACKEND := backend
 help: ## List targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
 
-install: ## Install backend dependencies
-	cd $(BACKEND) && uv sync
+install: ## Install backend dependencies (with the Claude extraction backend)
+	cd $(BACKEND) && uv sync --extra llm
 
 seed: ## Load demo tenants, users, and vendors (password: demo-password)
 	cd $(BACKEND) && uv run python -m vendor_intake.seed

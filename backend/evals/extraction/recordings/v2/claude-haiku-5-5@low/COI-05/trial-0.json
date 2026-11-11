@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.54,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Each occurrence: $2,000,000",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.0,
+      "quote": null,
+      "value": null
+    },
+    "insurer": {
+      "confidence": 0.95,
+      "quote": "Insurer A: Pacific Shield Insurance Company",
+      "value": "Pacific Shield Insurance Company"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy number: PA-41-2975",
+      "value": "PA-41-2975"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3402,
+    "output_tokens": 263
+  }
+}

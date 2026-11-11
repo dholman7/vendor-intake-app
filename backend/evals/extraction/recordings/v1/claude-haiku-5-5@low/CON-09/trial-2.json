@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 3.07,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Acme Packaging Corp. (Supplier)",
+      "value": "Acme Packaging Corp."
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "Effective Date: 04/22/2027.",
+      "value": "2027-04-22"
+    },
+    "expiry_date": {
+      "confidence": 0.0,
+      "quote": null,
+      "value": null
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1394,
+    "output_tokens": 598
+  }
+}
