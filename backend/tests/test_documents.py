@@ -37,13 +37,13 @@ def test_upload_returns_processing_then_extracts_in_background(
 
 
 def test_failed_extraction_marks_document_failed_and_is_audited(
-    client: TestClient, api: Api, member: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    client: TestClient, api: Api, member: dict[str, str]
 ) -> None:
     # Arrange
     def broken_extractor(*_: object) -> None:
         raise RuntimeError("extractor crashed")
 
-    monkeypatch.setattr("vendor_intake.services.documents.extract_fields", broken_extractor)
+    client.app.state.extractor = broken_extractor  # type: ignore[attr-defined]
     vendor = api.create_vendor(member)
 
     # Act

@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -18,6 +19,11 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 10 * 1024 * 1024
     # Simulated extraction latency so the UI exercises its polling path.
     extraction_delay_seconds: float = 1.0
+    # "deterministic" reads `Key: Value` text uploads; "claude" reads any upload with a model
+    # (install the `llm` extra and set ANTHROPIC_API_KEY).
+    extraction_backend: Literal["deterministic", "claude"] = "deterministic"
+    extraction_model: str = "claude-haiku-5-5"
+    extraction_effort: Literal["low", "medium", "high"] = "low"
     cookie_secure: bool = False
 
     @model_validator(mode="after")

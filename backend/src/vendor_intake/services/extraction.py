@@ -1,17 +1,24 @@
-"""Deterministic stand-in for AI field extraction.
+"""Field extraction: the deterministic backend, the parsers every backend normalizes with, and
+the choice between backends.
 
-Reads `Key: Value` lines from text uploads. Binary uploads (PDF, images) yield every field
-with a null value and zero confidence, which routes them to manual review.
+The deterministic backend reads `Key: Value` lines from text uploads. Binary uploads (PDF,
+images) yield every field with a null value and zero confidence, which routes them to manual
+review. The model-backed backend is in `llm_extraction`.
 """
 
 import re
 from collections.abc import Callable
 from datetime import date, datetime
+from typing import TYPE_CHECKING
 
 from vendor_intake.db import DocumentKind
 
+if TYPE_CHECKING:
+    from vendor_intake.config import Settings
+
 Field = dict[str, str | float | None]
 Parser = Callable[[str], tuple[str | None, float]]
+Extractor = Callable[[DocumentKind, bytes, str], dict[str, Field]]
 
 
 def _text(raw: str) -> tuple[str | None, float]:
@@ -79,6 +86,14 @@ def extract_fields(kind: DocumentKind, content: bytes, content_type: str) -> dic
         value, confidence = parse(raw) if raw is not None else (None, 0.0)
         fields[name] = {"value": value, "confidence": confidence}
     return fields
+
+
+def make_extractor(settings: "Settings") -> Extractor:
+    if settings.extraction_backend == "deterministic":
+        return extract_fields
+    from vendor_intake.services.llm_extraction import ClaudeExtractor
+
+    return ClaudeExtractor(settings.extraction_model, settings.extraction_effort).extract
 
 
 def lowest_confidence(fields: dict[str, Field]) -> float:
