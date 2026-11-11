@@ -14,7 +14,7 @@ import calendar
 import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -387,9 +387,10 @@ def _pdf(text: str) -> bytes:
     from fpdf import FPDF
 
     pdf = FPDF()
-    # A fixed date keeps the bytes, and so the eval recordings keyed by them, stable.
-    pdf.set_creation_date(datetime(2026, 11, 11))
-    # Uncompressed streams: zlib builds differ across platforms, and so would the bytes.
+    # A fixed UTC date keeps the bytes identical on every machine: a naive one is read in the
+    # local time zone, and the PDF's /ID is derived from it.
+    pdf.set_creation_date(datetime(2026, 11, 11, tzinfo=UTC))
+    # Uncompressed, so a change to a document shows up readably in a diff.
     pdf.set_compression(False)
     pdf.add_page()
     pdf.set_font("helvetica", size=10)
