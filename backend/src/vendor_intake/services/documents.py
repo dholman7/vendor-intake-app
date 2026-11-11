@@ -16,7 +16,7 @@ from vendor_intake.db import (
 from vendor_intake.errors import AppError
 from vendor_intake.repositories.audit import AuditRepository
 from vendor_intake.repositories.documents import DocumentRepository, ExtractionRepository
-from vendor_intake.services.extraction import extract_fields, lowest_confidence
+from vendor_intake.services.extraction import Extractor, extract_fields, lowest_confidence
 from vendor_intake.services.storage import LocalStorage
 from vendor_intake.services.vendors import ensure_editable
 
@@ -88,6 +88,7 @@ def process_document(
     document_id: str,
     tenant_id: str,
     delay_seconds: float,
+    extractor: Extractor = extract_fields,
 ) -> None:
     """Background job: extract fields and record the outcome on the document."""
     if delay_seconds:
@@ -99,7 +100,7 @@ def process_document(
             return
         audit = AuditRepository(session)
         try:
-            fields = extract_fields(
+            fields = extractor(
                 DocumentKind(document.kind),
                 storage.read(document.storage_path),
                 document.content_type,

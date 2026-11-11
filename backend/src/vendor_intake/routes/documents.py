@@ -49,6 +49,7 @@ async def upload_document(
         document.id,
         user.tenant_id,
         settings.extraction_delay_seconds,
+        request.app.state.extractor,
     )
     return DocumentOut.model_validate(document)
 

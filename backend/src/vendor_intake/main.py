@@ -10,6 +10,7 @@ from vendor_intake.config import Settings, get_settings
 from vendor_intake.db import Base, make_engine, make_session_factory, utcnow
 from vendor_intake.errors import install_error_handlers
 from vendor_intake.routes import auth, documents, review, vendors
+from vendor_intake.services.extraction import make_extractor
 from vendor_intake.services.storage import LocalStorage
 
 
@@ -35,6 +36,7 @@ def create_app(
     app.state.settings = settings
     app.state.session_factory = make_session_factory(engine)
     app.state.storage = LocalStorage(settings.storage_dir)
+    app.state.extractor = make_extractor(settings)
     app.state.today = today or (lambda: utcnow().date())
     install_error_handlers(app)
 
