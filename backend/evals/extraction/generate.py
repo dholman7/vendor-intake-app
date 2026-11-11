@@ -389,6 +389,8 @@ def _pdf(text: str) -> bytes:
     pdf = FPDF()
     # A fixed date keeps the bytes, and so the eval recordings keyed by them, stable.
     pdf.set_creation_date(datetime(2026, 11, 11))
+    # Uncompressed streams: zlib builds differ across platforms, and so would the bytes.
+    pdf.set_compression(False)
     pdf.add_page()
     pdf.set_font("helvetica", size=10)
     pdf.multi_cell(w=0, h=5, text=text)
