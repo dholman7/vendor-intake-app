@@ -50,7 +50,7 @@ Demo accounts (password `demo-password`); the sign-in page has buttons to fill t
 |---|---|---|
 | Backend | 90 pytest tests, 96% coverage, ruff and mypy `--strict` | `make check` |
 | Extraction evals | 75 generated documents scored against known truth; replayed and gated in CI with no API key | [below](#extraction-evals) |
-| UI | Playwright: sign-in, vendor CRUD, the member-to-reviewer journey, role and tenant access, axe accessibility scans | `make e2e` |
+| UI | Playwright: sign-in, vendor CRUD, the member-to-reviewer journey, role and tenant access, axe accessibility scans, and the AI extraction against recorded model outputs (no key) | `make e2e` |
 | API | Playwright request tests with persona fixtures ([`e2e/fixtures`](e2e/fixtures/index.ts)); intentionally minimal | `make e2e` |
 
 `make e2e` starts both servers against a fresh seeded database. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs a secret scan, backend checks, frontend type/lint/build, both drift checks, the Docker build, and the Playwright suite against a production build.
@@ -101,6 +101,8 @@ uv run python -m evals.extraction gate --baseline evals/extraction/baselines/hai
 - **New recordings** (a new prompt or model): agent-eval-gate's paired test by document (p < 0.05 and at least 5 points worse). A prompt change bumps the prompt version and needs a live run whose recordings are committed in the pull request, so the evidence sits in the diff.
 
 CI also checks that the generator still produces exactly the committed documents.
+
+**End to end**, Playwright runs the API with `VI_EXTRACTION_BACKEND=replay`. An upload of an eval document gets Claude's recorded output, through the real grounding code, so [`ui/extraction.spec.ts`](e2e/ui/extraction.spec.ts) can check what a reviewer sees on the vendor page: the tax ID the model transposed shows 0% confidence, and the fields it read right don't. With grounding removed, the test fails, showing 95%.
 
 ## Layout
 

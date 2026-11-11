@@ -91,6 +91,13 @@ def extract_fields(kind: DocumentKind, content: bytes, content_type: str) -> dic
 def make_extractor(settings: "Settings") -> Extractor:
     if settings.extraction_backend == "deterministic":
         return extract_fields
+    if settings.extraction_backend == "replay":
+        from vendor_intake.services.replay_extraction import ReplayExtractor
+
+        replay = ReplayExtractor(
+            settings.extraction_replay_dir, settings.extraction_model, settings.extraction_effort
+        )
+        return replay.extract
     from vendor_intake.services.llm_extraction import ClaudeExtractor
 
     return ClaudeExtractor(settings.extraction_model, settings.extraction_effort).extract

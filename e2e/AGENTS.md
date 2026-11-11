@@ -48,6 +48,8 @@ Also exported: `uniqueName`, `sample`, `USERS`, `PASSWORD`, `DOCUMENT_KINDS`, `K
 
 **PW-14. Name controls exactly** (lint). A `getByRole` with a fixed name passes `exact: true`, in page objects as well as specs. Playwright matches names by substring by default, so `{ name: "Next" }` also matches Next.js's "Open Next.js Dev Tools" button, which `next dev` adds to every page. That broke a pager test on Linux CI.
 
+**PW-15. Test the AI feature against recordings, never a live model.** The e2e API runs with `VI_EXTRACTION_BACKEND=replay`: an upload of an extraction eval document (`factory.evalDocument(vendorId, kind, "W9-09.pdf")`) gets the output Claude gave for it when the evals were recorded, through the app's real normalization and grounding. Assert what a reviewer would see, such as a confidence meter. A live model call would make the test flaky, slow, and dependent on an API key, and it would test the model instead of the app. Any other upload uses the deterministic backend.
+
 ## Layout
 
 ```
