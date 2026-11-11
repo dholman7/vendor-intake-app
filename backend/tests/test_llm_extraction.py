@@ -100,7 +100,8 @@ def test_w9_keeps_the_last_four_of_a_grounded_tax_id() -> None:
     text = "Name: Acme Freight LLC\nEmployer identification number: 12-3456789\n[x] LLC\n"
     output = {
         "legal_name": _item("Acme Freight LLC", "Name: Acme Freight LLC"),
-        "tax_id_last4": _item("123456789", "Employer identification number: 12-3456789"),
+        # The model sees `tax_id` (prompt v2); the app stores the last four as tax_id_last4.
+        "tax_id": _item("123456789", "Employer identification number: 12-3456789"),
         "business_type": _item("LLC", "[x] LLC"),
     }
     fields = llm.fields_from_output(DocumentKind.W9, output, text)
@@ -114,7 +115,7 @@ def test_request_sends_text_as_a_document_with_a_strict_schema() -> None:
     assert block["type"] == "document" and block["source"]["type"] == "text"
     assert params["output_config"]["effort"] == "low"
     schema = params["output_config"]["format"]["schema"]
-    assert schema["required"] == ["legal_name", "tax_id_last4", "business_type"]
+    assert schema["required"] == ["legal_name", "tax_id", "business_type"]
     assert schema["additionalProperties"] is False
     business = schema["properties"]["business_type"]["properties"]["value"]["anyOf"][0]
     assert business["enum"] == llm.BUSINESS_TYPES
@@ -217,3 +218,32 @@ def test_uploads_go_through_the_configured_extractor(
     assert seen == ["application/pdf"]
     extraction = api.extractions(member, vendor["id"])["insurance_certificate"]
     assert extraction["fields"] == {"insurer": {"value": "Harbor Mutual", "confidence": 0.4}}
+
+
+def test_opus_and_sonnet_opt_into_refusal_fallback() -> None:
+    stub = _client(GOOD)
+    stub.beta = SimpleNamespace(messages=StubMessages(stub.messages.message))
+    llm.ClaudeExtractor("claude-opus-5-5", "low", client=stub).extract(
+        DocumentKind.INSURANCE_CERTIFICATE, INSURANCE_DOC.encode(), "text/plain"
+    )
+    call = stub.beta.messages.calls[0]
+    assert call["fallbacks"] == "default" and call["betas"] == [llm.FALLBACK_BETA]
+    assert stub.messages.calls == []
+
+
+def test_millions_written_short_still_ground() -> None:
+    text = "Limits: $2M per occurrence / $4M aggregate.\nOr $1.5 million umbrella."
+    assert llm.grounded("coverage_amount", "2000000", "Limits: $2M per occurrence", text)
+    assert llm.grounded("coverage_amount", "1500000", "Or $1.5 million umbrella.", text)
+    assert not llm.grounded("coverage_amount", "4000000", "Limits: $2M per occurrence", text)
+
+
+def test_older_prompt_versions_still_score_their_recorded_outputs() -> None:
+    # v1 showed the model `tax_id_last4`; its recordings must replay under today's code.
+    text = "Tax ID: 12-3456789"
+    output = {"tax_id_last4": _item("123456789", "Tax ID: 12-3456789")}
+    assert llm.fields_from_output(DocumentKind.W9, output, text, llm.V1)["tax_id_last4"] == {
+        "value": "6789",
+        "confidence": 0.9,
+    }
+    assert "tax_id_last4" in llm.schema(DocumentKind.W9, llm.V1)["properties"]

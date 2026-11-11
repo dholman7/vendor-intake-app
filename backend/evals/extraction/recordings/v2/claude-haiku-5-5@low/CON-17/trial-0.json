@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.25,
+  "output": {
+    "counterparty": {
+      "confidence": 0.9,
+      "quote": "Counterparty: Delta Packaging Corp.",
+      "value": "Delta Packaging Corp."
+    },
+    "effective_date": {
+      "confidence": 0.95,
+      "quote": "Effective Date: 2027-03-28",
+      "value": "2027-03-28"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "Expiry Date: 2029-03-27",
+      "value": "2029-03-27"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1402,
+    "output_tokens": 147
+  }
+}

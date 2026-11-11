@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.25,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.97,
+      "quote": "providing $2,000,000 per occurrence",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "remains in force until November 8, 2027",
+      "value": "2027-11-08"
+    },
+    "insurer": {
+      "confidence": 0.95,
+      "quote": "holds a commercial general liability policy with Northwind Assurance Group, policy number NO-37-8353",
+      "value": "Northwind Assurance Group"
+    },
+    "policy_number": {
+      "confidence": 0.98,
+      "quote": "policy number NO-37-8353",
+      "value": "NO-37-8353"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1776,
+    "output_tokens": 201
+  }
+}

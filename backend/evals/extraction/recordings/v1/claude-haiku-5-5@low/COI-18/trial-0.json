@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.79,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.95,
+      "quote": "Limits: $2M per occurrence / $4M aggregate.",
+      "value": "2000000"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "Coverage runs August 5, 2026 through August 4, 2027.",
+      "value": "2027-08-04"
+    },
+    "insurer": {
+      "confidence": 0.97,
+      "quote": "Carrier: Granite State Casualty.",
+      "value": "Granite State Casualty"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy GR-27-6364.",
+      "value": "GR-27-6364"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3312,
+    "output_tokens": 199
+  }
+}

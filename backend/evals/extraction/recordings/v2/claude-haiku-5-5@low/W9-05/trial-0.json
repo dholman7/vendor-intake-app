@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 1.75,
+  "output": {
+    "business_type": {
+      "confidence": 0.85,
+      "quote": "Business Type: Partnership",
+      "value": "Partnership"
+    },
+    "legal_name": {
+      "confidence": 0.9,
+      "quote": "Legal Name: Granite Labs LP",
+      "value": "Granite Labs LP"
+    },
+    "tax_id": {
+      "confidence": 0.9,
+      "quote": "Tax ID: 64-3035874",
+      "value": "643035874"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1415,
+    "output_tokens": 128
+  }
+}

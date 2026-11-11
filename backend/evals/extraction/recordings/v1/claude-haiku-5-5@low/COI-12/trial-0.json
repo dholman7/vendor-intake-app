@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 2.04,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.93,
+      "quote": "Each occurrence: $1,000,000",
+      "value": "1000000"
+    },
+    "expiry_date": {
+      "confidence": 0.96,
+      "quote": "Policy exp: 11/05/2027",
+      "value": "2027-11-05"
+    },
+    "insurer": {
+      "confidence": 0.95,
+      "quote": "Insurer A: Pacific Shield Insurance Company",
+      "value": "Pacific Shield Insurance Company"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "Policy number: PA-66-9826",
+      "value": "PA-66-9826"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1839,
+    "output_tokens": 432
+  }
+}
