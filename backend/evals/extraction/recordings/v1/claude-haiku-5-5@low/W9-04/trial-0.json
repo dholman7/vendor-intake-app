@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.48,
+  "output": {
+    "business_type": {
+      "confidence": 0.95,
+      "quote": "Business Type: Partnership",
+      "value": "Partnership"
+    },
+    "legal_name": {
+      "confidence": 0.95,
+      "quote": "Legal Name: Harbor Analytics LP",
+      "value": "Harbor Analytics LP"
+    },
+    "tax_id_last4": {
+      "confidence": 0.93,
+      "quote": "Tax ID: 14-0661583",
+      "value": "1583"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1437,
+    "output_tokens": 309
+  }
+}

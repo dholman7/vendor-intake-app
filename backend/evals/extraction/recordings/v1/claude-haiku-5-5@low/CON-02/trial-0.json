@@ -1,0 +1,28 @@
+{
+  "error": null,
+  "latency_s": 2.87,
+  "output": {
+    "counterparty": {
+      "confidence": 0.97,
+      "quote": "Juniper Freight LLC (\"Provider\")",
+      "value": "Juniper Freight LLC"
+    },
+    "effective_date": {
+      "confidence": 0.97,
+      "quote": "effective December 9, 2026",
+      "value": "2026-12-09"
+    },
+    "expiry_date": {
+      "confidence": 0.97,
+      "quote": "expires December 8, 2029",
+      "value": "2029-12-08"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 1405,
+    "output_tokens": 138
+  }
+}

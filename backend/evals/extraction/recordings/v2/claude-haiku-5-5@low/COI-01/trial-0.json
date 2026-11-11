@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "latency_s": 1.33,
+  "output": {
+    "coverage_amount": {
+      "confidence": 0.96,
+      "quote": "providing $1,000,000 per occurrence.",
+      "value": "1000000"
+    },
+    "expiry_date": {
+      "confidence": 0.95,
+      "quote": "remains in force until August 12, 2027.",
+      "value": "2027-08-12"
+    },
+    "insurer": {
+      "confidence": 0.95,
+      "quote": "policy with Northwind Assurance Group,",
+      "value": "Northwind Assurance Group"
+    },
+    "policy_number": {
+      "confidence": 0.97,
+      "quote": "policy number NO-26-9073,",
+      "value": "NO-26-9073"
+    }
+  },
+  "served_model": "claude-haiku-5-5",
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 3334,
+    "output_tokens": 185
+  }
+}
