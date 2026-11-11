@@ -2,6 +2,7 @@
 and failure handling. No API calls."""
 
 import json
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
@@ -11,7 +12,8 @@ from fastapi.testclient import TestClient
 from tests.conftest import Api
 from vendor_intake.db import DocumentKind
 from vendor_intake.services import llm_extraction as llm
-from vendor_intake.services.extraction import Field
+from vendor_intake.services.extraction import Field, extract_fields
+from vendor_intake.services.replay_extraction import ReplayExtractor
 
 INSURANCE_DOC = (
     "CERTIFICATE OF LIABILITY INSURANCE\n"
@@ -238,3 +240,25 @@ def test_older_prompt_versions_still_score_their_recorded_outputs() -> None:
         "confidence": 0.9,
     }
     assert "tax_id_last4" in llm.schema(DocumentKind.W9, llm.V1)["properties"]
+
+
+EVALS = Path(__file__).parents[1] / "evals" / "extraction"
+
+
+def test_replay_serves_the_recorded_output_through_real_grounding() -> None:
+    # W9-09: the model transposed the tax ID's digits while quoting it correctly.
+    replay = ReplayExtractor(EVALS)
+    content = (EVALS / "data" / "docs" / "W9-09.pdf").read_bytes()
+
+    fields = replay.extract(DocumentKind.W9, content, "application/pdf")
+
+    assert fields["tax_id_last4"] == {"value": "3335", "confidence": 0.0}
+    assert fields["legal_name"]["value"] == "Northgate Analytics LP"
+    assert float(fields["legal_name"]["confidence"] or 0) >= 0.8
+
+
+def test_replay_falls_back_to_the_deterministic_backend_for_other_uploads() -> None:
+    content = b"Legal Name: Acme Freight LLC\nTax ID: 12-3456789\nBusiness Type: LLC\n"
+    assert ReplayExtractor(EVALS).extract(DocumentKind.W9, content, "text/plain") == extract_fields(
+        DocumentKind.W9, content, "text/plain"
+    )

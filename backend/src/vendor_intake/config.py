@@ -20,10 +20,13 @@ class Settings(BaseSettings):
     # Simulated extraction latency so the UI exercises its polling path.
     extraction_delay_seconds: float = 1.0
     # "deterministic" reads `Key: Value` text uploads; "claude" reads any upload with a model
-    # (install the `llm` extra and set ANTHROPIC_API_KEY).
-    extraction_backend: Literal["deterministic", "claude"] = "deterministic"
+    # (install the `llm` extra and set ANTHROPIC_API_KEY); "replay" serves the extraction evals'
+    # recorded outputs, for end-to-end tests.
+    extraction_backend: Literal["deterministic", "claude", "replay"] = "deterministic"
     extraction_model: str = "claude-haiku-5-5"
     extraction_effort: Literal["low", "medium", "high"] = "low"
+    # The extraction evals' directory, for the replay backend (relative to backend/).
+    extraction_replay_dir: Path = Path("evals/extraction")
     cookie_secure: bool = False
 
     @model_validator(mode="after")

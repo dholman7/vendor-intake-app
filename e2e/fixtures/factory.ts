@@ -8,6 +8,8 @@ import type { Persona } from "./users";
 
 export const SAMPLES = path.resolve(__dirname, "../../samples");
 export const sample = (file: string) => path.join(SAMPLES, file);
+/** The extraction eval set; under the replay backend each extracts as Claude did when recorded. */
+export const EVAL_DOCS = path.resolve(__dirname, "../../backend/evals/extraction/data/docs");
 
 /** Vendor names must be unique per tenant, and tests share one database. */
 export function uniqueName(prefix: string): string {
@@ -66,6 +68,23 @@ export class Factory {
       multipart: { kind, file: { name: file, mimeType: "text/plain", buffer: readFileSync(sample(file)) } },
     });
     return expectStatus<Document>(response, 201);
+  }
+
+  /** Uploads one of the extraction eval set's documents, such as "W9-09.pdf", and waits for extraction. */
+  async evalDocument(vendorId: string, kind: DocumentKind, file: string, as: Persona = "member"): Promise<Document> {
+    const api = await this.apiAs(as);
+    const mimeType = file.endsWith(".pdf") ? "application/pdf" : "text/plain";
+    const response = await api.post(`/api/vendors/${vendorId}/documents`, {
+      multipart: { kind, file: { name: file, mimeType, buffer: readFileSync(path.join(EVAL_DOCS, file)) } },
+    });
+    const document = await expectStatus<Document>(response, 201);
+    await expect
+      .poll(async () => (await expectStatus<Document>(await api.get(`/api/documents/${document.id}`), 200)).status, {
+        message: `${file} is extracted`,
+        timeout: 30_000,
+      })
+      .toBe("extracted");
+    return document;
   }
 
   /** A draft vendor with all three documents uploaded and extracted. */
