@@ -104,13 +104,15 @@ def test_w9_keeps_the_last_four_of_a_grounded_tax_id() -> None:
         "tax_id": _item("123456789", "Employer identification number: 12-3456789"),
         "business_type": _item("LLC", "[x] LLC"),
     }
-    fields = llm.fields_from_output(DocumentKind.W9, output, text)
+    fields = llm.fields_from_output(DocumentKind.W9, output, text, llm.V2)
     assert fields["tax_id_last4"] == {"value": "6789", "confidence": 0.9}
     assert fields["business_type"]["value"] == "LLC"
 
 
 def test_request_sends_text_as_a_document_with_a_strict_schema() -> None:
-    params = llm.request(DocumentKind.W9, b"Name: Acme", "text/plain", "claude-haiku-5-5", "low")
+    params = llm.request(
+        DocumentKind.W9, b"Name: Acme", "text/plain", "claude-haiku-5-5", "low", llm.V2
+    )
     block = params["messages"][0]["content"][0]
     assert block["type"] == "document" and block["source"]["type"] == "text"
     assert params["output_config"]["effort"] == "low"
