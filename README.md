@@ -48,12 +48,27 @@ Demo accounts (password `demo-password`); the sign-in page has buttons to fill t
 
 | Suite | What | Run |
 |---|---|---|
-| Backend | 90 pytest tests, 96% coverage, ruff and mypy `--strict` | `make check` |
+| Backend | 93 pytest tests, 96% coverage, ruff and mypy `--strict` | `make check` |
+| Contract | Pact: the web app's 16 interactions, verified against the real API; `can-i-deploy` gates the Docker build | [`make contract`](#contract-tests) |
 | Extraction evals | 75 generated documents scored against known truth; replayed and gated in CI with no API key | [below](#extraction-evals) |
 | UI | Playwright: sign-in, vendor CRUD, the member-to-reviewer journey, role and tenant access, axe accessibility scans, and the AI extraction against recorded model outputs (no key) | `make e2e` |
 | API | Playwright request tests with persona fixtures ([`e2e/fixtures`](e2e/fixtures/index.ts)); intentionally minimal | `make e2e` |
 
-`make e2e` starts both servers against a fresh seeded database. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs a secret scan, backend checks, frontend type/lint/build, both drift checks, the Docker build, and the Playwright suite against a production build.
+`make e2e` starts both servers against a fresh seeded database. CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs a secret scan, backend checks, frontend type/lint/build, both drift checks, the contract tests with `can-i-deploy`, the Docker build, and the Playwright suite against a production build.
+
+## Contract tests
+
+The web app and the API agree on a [Pact](https://docs.pact.io) contract: what each request looks like and which response fields the UI reads.
+
+- **Consumer** ([`frontend/pact`](frontend/pact/api.pact.test.ts)): 16 interactions, written by calling the UI's own API client ([`lib/client.ts`](frontend/lib/client.ts)) against Pact's mock provider. They cover sign-in, vendors, submission, documents, the review queue, and decisions, including the errors the UI shows. Responses assert only what the UI uses, so the API can change anything else freely.
+- **Provider** ([`backend/tests/contract`](backend/tests/contract/test_provider.py)): replays the contract against the real API. Each interaction's provider states create exactly the rows it names, and a session cookie is injected, because contracts don't carry credentials. Uploads are left to Playwright: Pact's multipart matching can't describe a form field plus a file.
+- **CI** runs both against a Pact Broker started for the run. `can-i-deploy` has to pass for the commit before the Docker images build.
+
+The contract found a real defect on its first run. The API returned times without a zone (SQLite drops it), and the UI's `new Date(...)` read them as local time, so every time on screen was off by the viewer's UTC offset. The fix marks stored times as UTC, and a backend test pins it.
+
+```bash
+make contract    # write the contract, then verify the API against it
+```
 
 ## AI extraction
 

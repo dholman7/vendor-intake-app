@@ -173,3 +173,21 @@ def test_vendor_in_review_cannot_be_edited(
     # Assert
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "vendor_locked"
+
+
+def test_times_carry_their_zone(client: TestClient, member: dict[str, str]) -> None:
+    # Regression, found by the web app's contract: SQLite dropped the zone, so a browser read
+    # created_at (UTC) as local time and showed every time shifted by the viewer's offset.
+    response = client.post(
+        "/api/vendors",
+        json={
+            "name": "Zoned Freight",
+            "category": "logistics",
+            "contact_email": "ops@zoned.example",
+        },
+        headers=member,
+    )
+    vendor = client.get(f"/api/vendors/{response.json()['id']}", headers=member).json()
+
+    for key in ("created_at", "updated_at"):
+        assert vendor[key].endswith(("Z", "+00:00")), vendor[key]
