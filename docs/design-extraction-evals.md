@@ -50,7 +50,7 @@ vendor-intake-app can extract fields from uploaded W-9s, insurance certificates,
 
 | Model | Per document | Held-out and adversarial, 3 trials |
 |---|---|---|
-| Haiku 5.5 | about $0.00036, live | about $0.04 |
+| Haiku 5.5 | about $0.00036, live | about $0.06 |
 | Sonnet 5.5 | about $0.003, batch | about $0.50 |
 | Opus 5.5 | about $0.006, batch | about $1 |
 
