@@ -17,7 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 # VI_EXTRACTION_BACKEND=claude. pypdf reads PDF text to ground the model's quotes; 7.x shipped
 # 2026-11-06, adopt after two weeks.
-llm = ["anthropic>=1.15,<2", "pypdf>=6.21,<7"]
+llm = ["anthropic>=1.15,<3", "pypdf>=6.21,<8"]
 
 [dependency-groups]
 dev = [
@@ -34,7 +34,7 @@ dev = [
 # The extraction evals (evals/extraction). fpdf2 renders the golden set's PDFs (2.9.0 shipped
 # 2026-10-29); agent-eval-gate supplies the paired gate, pinned to a commit.
 evals = [
-    "fpdf2>=2.8.9,<2.9",
+    "fpdf2>=2.8.9,<2.10",
     # Two newer stub releases shipped this month; adopt after two weeks.
     "types-PyYAML>=6.0.12.20260906,<6.0.12.20261103",
     "agent-eval-gate @ git+https://github.com/dholman7/agent-eval-gate@405ee5415d3d9a7b99a6e43ecd498ef2b0adf8ac",
