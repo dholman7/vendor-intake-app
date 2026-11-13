@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { FormFields } from "@/components/form-fields";
-import { api, asApiError, shownError } from "@/lib/api";
+import { asApiError, shownError } from "@/lib/api";
+import * as client from "@/lib/client";
 import { KIND_LABELS, formatDateTime } from "@/lib/format";
-import type { Extraction, ReviewQueueItem } from "@/lib/types";
+import type { Extraction } from "@/lib/types";
 import { useQuery } from "@/lib/use-query";
 
 function ExtractionReview({ extraction, onDecided }: { extraction: Extraction; onDecided: () => void }) {
@@ -21,10 +22,7 @@ function ExtractionReview({ extraction, onDecided }: { extraction: Extraction; o
     setBusy(true);
     setProblem(null);
     try {
-      await api(`/extractions/${extraction.id}/decision`, {
-        method: "POST",
-        body: JSON.stringify(decision === "reject" ? { decision, note } : { decision }),
-      });
+      await client.decide(extraction.id, decision === "reject" ? { decision, note } : { decision });
       onDecided();
     } catch (err) {
       const error = asApiError(err);
@@ -90,7 +88,7 @@ function ExtractionReview({ extraction, onDecided }: { extraction: Extraction; o
 }
 
 export default function ReviewQueuePage() {
-  const queue = useQuery("review-queue", () => api<ReviewQueueItem[]>("/review-queue"));
+  const queue = useQuery("review-queue", client.reviewQueue);
 
   return (
     <main className="page">

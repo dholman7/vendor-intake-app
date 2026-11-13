@@ -4,7 +4,16 @@ from enum import StrEnum
 from typing import Any, ClassVar
 from uuid import uuid4
 
-from sqlalchemy import JSON, ForeignKey, String, create_engine, event
+from sqlalchemy import (
+    JSON,
+    DateTime,
+    Dialect,
+    ForeignKey,
+    String,
+    TypeDecorator,
+    create_engine,
+    event,
+)
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -57,8 +66,22 @@ class ExtractionStatus(StrEnum):
     REJECTED = "rejected"
 
 
+class UTCDateTime(TypeDecorator[datetime]):
+    """Times are stored in UTC. SQLite returns them without a zone, and an API client that parses
+    a zoneless time reads it as its own local time, so every time read back is marked UTC."""
+
+    impl = DateTime
+    cache_ok = True
+
+    def process_bind_param(self, value: datetime | None, dialect: Dialect) -> datetime | None:
+        return value.astimezone(UTC).replace(tzinfo=None) if value and value.tzinfo else value
+
+    def process_result_value(self, value: datetime | None, dialect: Dialect) -> datetime | None:
+        return value.replace(tzinfo=UTC) if value is not None and value.tzinfo is None else value
+
+
 class Base(DeclarativeBase):
-    type_annotation_map: ClassVar[dict[Any, Any]] = {dict[str, Any]: JSON}
+    type_annotation_map: ClassVar[dict[Any, Any]] = {dict[str, Any]: JSON, datetime: UTCDateTime}
 
 
 class Tenant(Base):

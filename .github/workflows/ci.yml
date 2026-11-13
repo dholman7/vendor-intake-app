@@ -59,8 +59,63 @@ jobs:
         run: npm run gen:types && git diff --exit-code lib/api-schema.d.ts
       - run: npm run build
 
+  contract:
+    name: Contract (Pact consumer, provider, can-i-deploy)
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    # A broker for this run only: it holds this commit's contract and verification result, so
+    # can-i-deploy answers for this commit. A long-lived broker would also record deployments.
+    services:
+      broker:
+        image: pactfoundation/pact-broker:3.0.0-pactbroker2.121.2
+        ports: ["9292:9292"]
+        env:
+          PACT_BROKER_DATABASE_ADAPTER: sqlite
+          PACT_BROKER_DATABASE_NAME: /tmp/pact_broker.sqlite3
+    env:
+      PACT_BROKER_BASE_URL: http://localhost:9292
+      PACT_DO_NOT_TRACK: "true"
+      PACT_CLI: docker run --rm --network host -v ${{ github.workspace }}/pacts:/pacts pactfoundation/pact-cli:1.5.0.5 pact-broker
+      VERSION: ${{ github.sha }}
+      BRANCH: ${{ github.head_ref || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v7
+      # setup-uv publishes only full-version tags (no moving v10), so pin the latest release.
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          working-directory: backend
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: make install
+      - run: npm ci --prefix frontend
+      - name: Consumer tests write the contract
+        run: npm run test:pact --prefix frontend
+      - name: Wait for the broker
+        shell: bash
+        run: for i in $(seq 1 60); do curl -sf "$PACT_BROKER_BASE_URL/diagnostic/status/heartbeat" && exit 0; sleep 1; done; exit 1
+      - name: Publish the contract
+        run: $PACT_CLI publish /pacts --consumer-app-version "$VERSION" --branch "$BRANCH" --broker-base-url "$PACT_BROKER_BASE_URL"
+      - name: Verify the API against it, publishing the result
+        working-directory: backend
+        env:
+          PACT_PROVIDER_VERSION: ${{ github.sha }}
+          PACT_PROVIDER_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: uv run pytest tests/contract
+      - name: can-i-deploy
+        run: >-
+          $PACT_CLI can-i-deploy --broker-base-url "$PACT_BROKER_BASE_URL"
+          --pacticipant vendor-intake-web --version "$VERSION"
+          --pacticipant vendor-intake-api --version "$VERSION"
+
   docker:
     name: Docker images build
+    # Images are only built for a commit whose web app and API agree on their contract.
+    needs: contract
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

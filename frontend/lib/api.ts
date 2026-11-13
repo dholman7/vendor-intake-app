@@ -36,6 +36,13 @@ async function toApiError(response: Response): Promise<ApiError> {
   }
 }
 
+// Same origin in the browser; contract tests point this at a mock provider.
+let base = "";
+
+export function setApiBase(url: string): void {
+  base = url;
+}
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (init.body && !(init.body instanceof FormData) && !headers.has("content-type")) {
@@ -43,7 +50,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
   let response: Response;
   try {
-    response = await fetch(`/api${path}`, { ...init, headers, credentials: "same-origin" });
+    response = await fetch(`${base}/api${path}`, { ...init, headers, credentials: "same-origin" });
   } catch {
     throw new ApiError(0, "network_error", "Can't reach the server. Check your connection.");
   }

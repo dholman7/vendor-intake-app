@@ -4,8 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useState, type FormEvent } from "react";
 
 import { LogoMark } from "@/components/logo";
-import { api, asApiError } from "@/lib/api";
-import type { LoginResponse } from "@/lib/types";
+import { asApiError } from "@/lib/api";
+import * as client from "@/lib/client";
 
 const DEMO_ACCOUNTS = [
   { email: "member@northwind.test", label: "Member" },
@@ -26,10 +26,7 @@ function SignInForm() {
     setBusy(true);
     setError(null);
     try {
-      await api<LoginResponse>("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-      });
+      await client.login(email, password);
       // Only follow same-site paths so ?next= can't redirect off the app. A full load (not
       // router.replace) discards routes Next.js keeps alive in the background, which would
       // otherwise come back holding the signed-out state.

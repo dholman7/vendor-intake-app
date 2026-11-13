@@ -32,6 +32,10 @@ typecheck: ## Type-check the backend (mypy strict)
 
 check: lint typecheck test ## Everything CI runs for the backend
 
+contract: ## Write the web app's Pact contract, then verify the API against it
+	npm --prefix frontend run test:pact
+	cd $(BACKEND) && uv run pytest tests/contract
+
 openapi: ## Regenerate openapi.json from the API code
 	cd $(BACKEND) && uv run python -m vendor_intake.export_openapi ../openapi.json
 

@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
-import { ApiError, api, asApiError } from "@/lib/api";
+import { ApiError, asApiError } from "@/lib/api";
+import * as client from "@/lib/client";
 import { CATEGORY_LABELS } from "@/lib/format";
-import { VENDOR_CATEGORIES, type Vendor, type VendorCategory } from "@/lib/types";
+import { VENDOR_CATEGORIES, type VendorCategory } from "@/lib/types";
 
 export default function NewVendorPage() {
   const router = useRouter();
@@ -21,10 +22,7 @@ export default function NewVendorPage() {
     setBusy(true);
     setError(null);
     try {
-      const vendor = await api<Vendor>("/vendors", {
-        method: "POST",
-        body: JSON.stringify({ name, category, contact_email: contactEmail }),
-      });
+      const vendor = await client.createVendor({ name, category, contact_email: contactEmail });
       router.push(`/vendors/${vendor.id}`);
     } catch (err) {
       setError(asApiError(err));

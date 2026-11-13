@@ -5,9 +5,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 import { Flags, Status } from "@/components/status";
-import { api, shownError } from "@/lib/api";
+import { shownError } from "@/lib/api";
+import * as client from "@/lib/client";
 import { CATEGORY_LABELS, STATUS_LABELS, formatDateTime } from "@/lib/format";
-import { VENDOR_STATUSES, type VendorPage } from "@/lib/types";
+import { VENDOR_STATUSES } from "@/lib/types";
 import { useQuery } from "@/lib/use-query";
 
 const PAGE_SIZE = 10;
@@ -41,7 +42,7 @@ function VendorList() {
   if (q) query.set("q", q);
   if (status) query.set("status", status);
   const key = query.toString();
-  const vendors = useQuery(key, () => api<VendorPage>(`/vendors?${key}`));
+  const vendors = useQuery(key, () => client.listVendors(query));
 
   const total = vendors.data?.total ?? 0;
   const first = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;

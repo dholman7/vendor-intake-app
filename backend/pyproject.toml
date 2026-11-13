@@ -28,6 +28,8 @@ dev = [
     "httpx2>=2.15,<3",
     "ruff>=0.8.0",
     "mypy>=1.13.0",
+    # Provider verification of the web app's contract (tests/contract). 4.2.0 shipped 2026-10-23.
+    "pact-python==4.2.0",
 ]
 # The extraction evals (evals/extraction). fpdf2 renders the golden set's PDFs (2.9.0 shipped
 # 2026-10-29); agent-eval-gate supplies the paired gate, pinned to a commit.

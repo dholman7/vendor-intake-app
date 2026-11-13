@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, type ReactNode } from "react";
 
-import { api } from "./api";
+import * as client from "./client";
 import type { User } from "./types";
 import { useQuery } from "./use-query";
 
@@ -25,7 +25,7 @@ export function useSession(): Session {
 /** Loads the signed-in user and sends anyone without a session to /login. */
 export function SessionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const me = useQuery("me", () => api<User>("/me"));
+  const me = useQuery("me", client.me);
 
   useEffect(() => {
     if (me.error?.status === 401) {
@@ -36,7 +36,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [me.error, router]);
 
   const signOut = useCallback(async () => {
-    await api<void>("/auth/logout", { method: "POST" });
+    await client.logout();
     // Full load so no page kept alive in the background still holds this user's data.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- intentional
     window.location.assign("/login");

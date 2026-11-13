@@ -6,7 +6,8 @@ import { Suspense, useState, type ChangeEvent } from "react";
 
 import { FormFields } from "@/components/form-fields";
 import { Flags, Status } from "@/components/status";
-import { api, asApiError, shownError } from "@/lib/api";
+import { asApiError, shownError } from "@/lib/api";
+import * as client from "@/lib/client";
 import { CATEGORY_LABELS, KIND_LABELS, auditLabel, formatDateTime } from "@/lib/format";
 import {
   DOCUMENT_KINDS,
@@ -31,9 +32,9 @@ interface VendorBundle {
 
 async function loadBundle(id: string): Promise<VendorBundle> {
   const [vendor, documents, audit] = await Promise.all([
-    api<Vendor>(`/vendors/${id}`),
-    api<VendorDocument[]>(`/vendors/${id}/documents`),
-    api<{ items: AuditEvent[] }>(`/vendors/${id}/audit`),
+    client.getVendor(id),
+    client.vendorDocuments(id),
+    client.vendorAudit(id),
   ]);
   // Documents arrive oldest first, so the last one per kind is the current upload.
   const latest = new Map(documents.map((doc) => [doc.kind, doc]));
@@ -42,7 +43,7 @@ async function loadBundle(id: string): Promise<VendorBundle> {
       const document = latest.get(kind);
       const extraction =
         document?.status === "extracted"
-          ? await api<Extraction>(`/documents/${document.id}/extraction`)
+          ? await client.extraction(document.id)
           : undefined;
       return [kind, { document, extraction }];
     }),
@@ -80,13 +81,10 @@ function DocumentPanel({
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
-    const body = new FormData();
-    body.set("kind", kind);
-    body.set("file", file);
     setUploading(true);
     setProblem(null);
     try {
-      await api(`/vendors/${vendorId}/documents`, { method: "POST", body });
+      await client.uploadDocument(vendorId, kind, file, file.name);
       onUploaded();
     } catch (err) {
       setProblem(asApiError(err).message);
@@ -179,7 +177,7 @@ function VendorDetail() {
     setSubmitting(true);
     setSubmitProblem(null);
     try {
-      await api(`/vendors/${vendor.id}/submit`, { method: "POST" });
+      await client.submitVendor(vendor.id);
       bundle.reload();
     } catch (err) {
       setSubmitProblem(asApiError(err).message);
