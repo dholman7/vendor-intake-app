@@ -1,3 +1,6 @@
+# No test in this repo covers these scenarios, on purpose. They are agent-eval-gate's UI
+# benchmark (benchmarks/vendor-intake-ui), whose reference tests live there. An agent writing a
+# UI test from one of them must not find an existing test to copy.
 Feature: Use the web app
   What people see and do in the browser. The API behavior behind these screens is specified in
   the other feature files; these scenarios cover what the screens show and allow.

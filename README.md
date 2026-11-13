@@ -33,7 +33,7 @@ Demo accounts (password `demo-password`); the sign-in page has buttons to fill t
 
 | Layer | Choices |
 |---|---|
-| Specs | [`features/`](features/): Gherkin for auth, vendors, documents, review, audit. Backend tests cite the feature they cover. |
+| Specs | [`features/`](features/): Gherkin for auth, vendors, documents, review, audit, the vendor lifecycle, and the UI. Backend tests cite the feature they cover. `ui.feature` and `lifecycle.feature` have no tests here on purpose: they are agent-eval-gate's UI and blind v3 benchmarks, whose reference tests live in that repo, so an agent can't copy an existing test. |
 | API | FastAPI, SQLAlchemy 2, SQLite. 16 operations under `/api`, OpenAPI at `/docs`. |
 | Data access | Repositories take `tenant_id` on every read; another tenant's record is indistinguishable from a missing one. |
 | Errors | One envelope everywhere: `{"error": {"code", "message", ...}}`; validation errors name the field. |
